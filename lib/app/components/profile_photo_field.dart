@@ -1,10 +1,6 @@
 import 'package:dronalms/app/components/profile_text_field.dart';
-import 'package:dronalms/app/modules/MyProfile/controllers/my_profile_controller.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 class ProfilePhotoTextField extends StatelessWidget {
   final String imageUrl;
   final bool isProtectedField;

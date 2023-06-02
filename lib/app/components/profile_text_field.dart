@@ -6,11 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ProfileTextField extends StatelessWidget {
+  var isPassword;
+
+ 
+
   ProfileTextField({
     Key key,
     this.hintText,
      this.textEditingController,
     this.isProtectedField = false,
+        this.isPassword = false, // New property for indicating if the field is a password field
+
      this.preIconData, IconButton suffixIconData, String Function(dynamic value) validator,
   }) : super(key: key);
   final String hintText;
@@ -27,6 +33,8 @@ class ProfileTextField extends StatelessWidget {
           controller: textEditingController,
           textAlign: TextAlign.start,
           readOnly: true,
+
+          obscureText: isPassword,
           enableInteractiveSelection: false,
           style: LmsTextUtil.textPoppins14(),
           decoration: InputDecoration(
@@ -51,6 +59,7 @@ class ProfileTextField extends StatelessWidget {
           textAlign: TextAlign.start,
           readOnly: fieldsController.isReadOnly.value == !isProtectedField,
           enableInteractiveSelection: false,
+          obscureText: isPassword,
           style: LmsTextUtil.textPoppins14(),
           decoration: InputDecoration(
             // hintText: hintText,

@@ -31,60 +31,57 @@ class _HomeState extends State<Home> {
     getTasksForDay(currentDate);
   }
 
- DateTime smallestDate;
-DateTime largestDate;
-DateTime startpause;
-DateTime endpause;
+  DateTime smallestDate;
+  DateTime largestDate;
+  DateTime startpause;
+  DateTime endpause;
 
-String smallestDates = ""; // Assign default value
-String largestDates = ""; // Assign default value
-String startpauses = ""; // Assign default value
-String endpauses = ""; // Assign default value
+  String smallestDates = ""; // Assign default value
+  String largestDates = ""; // Assign default value
+  String startpauses = ""; // Assign default value
+  String endpauses = ""; // Assign default value
 
-Future<List<Task>> getTasksForDay(DateTime day) async {
-  final employeTasks = await ApiEmploye().fetchtasks();
+  Future<List<Task>> getTasksForDay(DateTime day) async {
+    final employeTasks = await ApiEmploye().fetchtasks();
 
-  List<Task> tasksForDay = [];
+    List<Task> tasksForDay = [];
 
-  for (var task in employeTasks) {
-    if (isSameDay(task.dateDebut, day)) {
-      tasksForDay.add(task);
+    for (var task in employeTasks) {
+      if (isSameDay(task.dateDebut, day)) {
+        tasksForDay.add(task);
 
-      if (task.dateDebut != null) {
-        if (smallestDate == null || task.dateDebut.isBefore(smallestDate)) {
-          smallestDate = task.dateDebut;
-          smallestDates = smallestDate.toString().substring(11, 16);
+        if (task.dateDebut != null) {
+          if (smallestDate == null || task.dateDebut.isBefore(smallestDate)) {
+            smallestDate = task.dateDebut;
+            smallestDates = smallestDate.toString().substring(11, 16);
+          }
         }
-      }
 
-      if (task.dateFin != null) {
-        if (largestDate == null ||
-            task.dateFin.isAfter(largestDate) ||
-            task.dateDebut == null) {
-          largestDate = task.dateFin;
-          largestDates = largestDate.toString().substring(11, 16);
+        if (task.dateFin != null) {
+          if (largestDate == null ||
+              task.dateFin.isAfter(largestDate) ||
+              task.dateDebut == null) {
+            largestDate = task.dateFin;
+            largestDates = largestDate.toString().substring(11, 16);
+          }
         }
-      }
 
-      if (task.typeTache == "pause") {
-        startpauses = task.dateDebut != null
-            ? task.dateDebut.toString().substring(11, 16)
-            : "";
-        endpauses = task.dateFin != null
-            ? task.dateFin.toString().substring(11, 16)
-            : "";
-      } else {
-        startpauses = "";
-        endpauses = "";
+        if (task.typeTache == "pause") {
+          startpauses = task.dateDebut != null
+              ? task.dateDebut.toString().substring(11, 16)
+              : "";
+          endpauses = task.dateFin != null
+              ? task.dateFin.toString().substring(11, 16)
+              : "";
+        } else {
+          startpauses = "";
+          endpauses = "";
+        }
       }
     }
+
+    return tasksForDay;
   }
-  
-  return tasksForDay;
-}
-
-
- 
 
   Future<void> _loadData() async {
     try {
@@ -150,8 +147,8 @@ Future<List<Task>> getTasksForDay(DateTime day) async {
                     if (_employe != null) ...[
                       Center(
                         child: Container(
-                          height: 190,
-                          width: 380,
+                          height: 200,
+                          width: 760,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -190,15 +187,16 @@ Future<List<Task>> getTasksForDay(DateTime day) async {
                                           ),
                                           child: Icon(
                                             Icons.coffee_rounded,
-                                            color: Color.fromARGB(255, 215, 208, 208),
+                                            color: Color.fromARGB(
+                                                255, 215, 208, 208),
                                             size: 60,
                                           ),
                                         ),
                                       ],
                                     ),
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0,top: 40.0),
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, top: 40.0),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -231,20 +229,19 @@ Future<List<Task>> getTasksForDay(DateTime day) async {
                                       children: const [
                                         Padding(
                                           padding: EdgeInsets.only(
-                                            left: 2.0,top:10
-                                          ),
+                                              left: 2.0, top: 10),
                                           child: Icon(
                                             Icons.watch_later_outlined,
-                                            color: Color.fromARGB(255, 214, 211, 211),
+                                            color: Color.fromARGB(
+                                                255, 214, 211, 211),
                                             size: 60,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    
                                     Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 15.0,top: 8),
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0, top: 8),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -262,9 +259,7 @@ Future<List<Task>> getTasksForDay(DateTime day) async {
                                       ),
                                     ),
                                   ],
-                                  
                                 ),
-                                
                               ),
                               // Add a divider after the ListTile
                             ],

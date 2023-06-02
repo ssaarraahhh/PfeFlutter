@@ -17,7 +17,7 @@ class ApiFormation {
       print(cat);
       return cat;
     } else {
-      throw Exception('Failed to load categories');
+      throw Exception('Failed to load formations');
     }
   }
 

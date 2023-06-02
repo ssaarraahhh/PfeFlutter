@@ -160,11 +160,8 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                           ],
                         ),
                       );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Failed to load formations'),
-                      );
-                    } else {
+                    } 
+                     else {
                       return Center(
                         child: CircularProgressIndicator(),
                       );

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dronalms/app/constants/constant.dart';
@@ -152,7 +153,65 @@ class ApiEmploye {
     }
   }
 
- Future<String> updateEmploye(Employe employe) async {
+  Future<String> updateEmploye(Employe employe) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      print(token);
+
+      final Map<String, dynamic> decodedToken = json.decode(
+          ascii.decode(base64.decode(base64.normalize(token.split(".")[1]))));
+
+      print(decodedToken);
+      final String sid = decodedToken[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
+      print(sid);
+
+      int id = int.parse(sid);
+      Map jsonBody = {
+        'id': employe.id,
+        'cin': employe.cin,
+        'nom': employe.nom,
+        'prenom': employe.prenom,
+        'dateNaissance': employe.dateNaissance,
+        'adresse': employe.adresse,
+        'email': employe.email,
+        'fonction': employe.fonction,
+        'image': employe.image,
+        'numTel': employe.numTel,
+        'contrat': employe.contrat,
+        'taches': employe.taches,
+        'demandes': employe.demandes,
+        'magasin': employe.magasin,
+        'idMagasin': employe.idMagasin,
+        'role': employe.role.index,
+        // 'idContrat': employe.idContrat,
+        "color": employe.color,
+        'autorisation': employe.autorisation,
+        'password': employe.password
+      };
+
+      print(employe.id);
+      print(employe.password);
+      print(employe.image);
+      final response = await http.put(Uri.parse("$Url/$id"),
+          headers: {'content-type': 'application/json; charset=utf-8'},
+          body: jsonEncode(jsonBody));
+      print(response.statusCode);
+      if (response.statusCode == 204) {
+        print("${response.statusCode} pppp2");
+        return "updated succesfulyy";
+      } else {
+        throw Exception('Failed ');
+      }
+    } catch (e) {
+      // Handle any exceptions that might occur during the request.
+      print('An error occurred: $e');
+      return 'Failed to update employe: $e';
+    }
+  }
+
+  Future<String> putEmploye(Employe employe, bool change) async {
   try {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -167,7 +226,7 @@ class ApiEmploye {
     print(sid);
 
     int id = int.parse(sid);
-    Map jsonBody = {
+    Map<String, dynamic> jsonBody = {
       'id': employe.id,
       'cin': employe.cin,
       'nom': employe.nom,
@@ -184,7 +243,6 @@ class ApiEmploye {
       'magasin': employe.magasin,
       'idMagasin': employe.idMagasin,
       'role': employe.role.index,
-      // 'idContrat': employe.idContrat,
       "color": employe.color,
       'autorisation': employe.autorisation,
       'password': employe.password
@@ -192,16 +250,20 @@ class ApiEmploye {
 
     print(employe.id);
     print(employe.password);
-    final response = await http.put(Uri.parse("$Url/$id"),
-        headers: {'content-type': 'application/json; charset=utf-8'},
-        body: jsonEncode(jsonBody));
-    print(response.statusCode);
-    if (response.statusCode == 204) {
+    print(employe.image);
+    String url = "$Url/$id?change=${change.toString()}";
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'content-type': 'application/json; charset=utf-8'},
+      body: jsonEncode(jsonBody),
+    );
 
+    print(response.statusCode);
+    if (response.statusCode == 200) {
       print("${response.statusCode} pppp2");
-      return "updated succesfulyy";
+      return "updated successfully";
     } else {
-      throw Exception('Failed ');
+      throw Exception('Failed');
     }
   } catch (e) {
     // Handle any exceptions that might occur during the request.
@@ -210,4 +272,26 @@ class ApiEmploye {
   }
 }
 
+
+  Future<bool> testPassword(int id, String password) async {
+    final url = Uri.parse('$Url/test');
+    final body = jsonEncode({'id': id, 'pass': password});
+    final response = await http.post(
+      url,
+      body: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final bol = jsonResponse['bol'];
+      print(bol);
+      return bol;
+    } else {
+      throw Exception(
+          'Failed to test password. Status code: ${response.statusCode}');
+    }
+  }
 }

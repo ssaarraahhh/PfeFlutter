@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 
 
 class MyDropDownFormField extends GetView<SupportController> {
+  const MyDropDownFormField({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
@@ -32,7 +34,7 @@ class MyDropDownFormField extends GetView<SupportController> {
         labelText: "type",
         labelStyle: LmsTextUtil.textPoppins14(),
         enabled: true,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.error_outline_outlined,
           color: LmsColorUtil.primaryThemeColor,
         ),
@@ -40,11 +42,11 @@ class MyDropDownFormField extends GetView<SupportController> {
         contentPadding: EdgeInsets.only(left: 20.w),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.sp),
-          borderSide: BorderSide(color: LmsColorUtil.greyColor10),
+          borderSide: const BorderSide(color: LmsColorUtil.greyColor10),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.sp),
-          borderSide: BorderSide(color: LmsColorUtil.greyColor4, width: 1),
+          borderSide: const BorderSide(color: LmsColorUtil.greyColor4, width: 1),
         ),
       ),
     );
@@ -52,6 +54,8 @@ class MyDropDownFormField extends GetView<SupportController> {
 }
 
 class DropDownField extends GetView<SupportController> {
+  const DropDownField({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FormField(builder: (FormFieldState state) {
@@ -61,19 +65,19 @@ class DropDownField extends GetView<SupportController> {
             labelText: " Type",
             labelStyle: LmsTextUtil.textPoppins14(),
             enabled: true,
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.error_outline_outlined,
               color: LmsColorUtil.primaryThemeColor,
             ),
-            suffixIcon: Icon(Icons.keyboard_arrow_down_rounded),
+            suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
             contentPadding: EdgeInsets.only(left: 30.w),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.sp),
-              borderSide: BorderSide(color: LmsColorUtil.greyColor10),
+              borderSide: const BorderSide(color: LmsColorUtil.greyColor10),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.sp),
-              borderSide: BorderSide(color: LmsColorUtil.greyColor4, width: 1),
+              borderSide: const BorderSide(color: LmsColorUtil.greyColor4, width: 1),
             ),
           ),
           child: GestureDetector(
@@ -98,7 +102,7 @@ class DropDownField extends GetView<SupportController> {
                 },
               );
             },
-            child: Text("Issue Type"),
+            child: const Text("Issue Type"),
           ),
         ),
       );
@@ -154,16 +158,16 @@ class DropDownTextField extends GetView<SupportController> {
               },
             );
           },
-          child: Icon(Icons.keyboard_arrow_down_rounded),
+          child: const Icon(Icons.keyboard_arrow_down_rounded),
         ),
         contentPadding: EdgeInsets.only(left: 30.w),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30.sp),
-          borderSide: BorderSide(color: LmsColorUtil.greyColor10),
+          borderSide: const BorderSide(color: LmsColorUtil.greyColor10),
         ),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.sp),
-            borderSide: BorderSide(color: LmsColorUtil.greyColor4, width: 1)),
+            borderSide: const BorderSide(color: LmsColorUtil.greyColor4, width: 1)),
       ),
     );
   }

@@ -1,7 +1,5 @@
 import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/constants/image_constants.dart';
 import 'package:dronalms/app/components/icon_text_row.dart';
-import 'package:signalr_client/signalr_client.dart';
 
 import 'package:dronalms/app/routes/app_pages.dart';
 import 'package:dronalms/app/theme/color_util.dart';
@@ -15,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_employe.dart';
 
 class LmsDrawer extends StatefulWidget {
+  const LmsDrawer({Key key}) : super(key: key);
+
   @override
   LmsDrawerState createState() => LmsDrawerState();
 }
@@ -44,7 +44,7 @@ class LmsDrawerState extends State<LmsDrawer> {
           ListView(
             padding: EdgeInsets.only(
                 top: 60.h, left: 46.w, right: 10.w, bottom: 10.h),
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: [
               FutureBuilder<Employe>(
@@ -53,7 +53,7 @@ class LmsDrawerState extends State<LmsDrawer> {
                   if (snapshot.hasData) {
                     final employes = snapshot.data;
                     return ListTile(
-                      contentPadding: EdgeInsets.all(0),
+                      contentPadding: const EdgeInsets.all(0),
                       horizontalTitleGap: 15.w,
                       minLeadingWidth: 0,
                       minVerticalPadding: 0,

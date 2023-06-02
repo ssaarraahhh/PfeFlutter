@@ -22,7 +22,7 @@ class LmsTextUtil {
 
   static TextStyle textManrope20({Color color = Colors.white}) {
     return GoogleFonts.manrope(
-      fontSize: 20.sp,
+      fontSize: 15.sp,
       fontWeight: FontWeight.w800,
       color: color,
     );

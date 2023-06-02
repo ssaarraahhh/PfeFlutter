@@ -1,5 +1,5 @@
-import 'package:dronalms/app/constants/image_constants.dart';
 import 'package:dronalms/app/modules/LmsDashboard/views/lms_dashboard_view.dart';
+import 'package:dronalms/app/modules/Messagerie/views/HomeScreen.dart';
 import 'package:dronalms/app/theme/color_util.dart';
 import 'package:dronalms/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +83,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
         GestureDetector(
           onTap: () {
-            showNotificationDialog();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomeScreen()));
           },
           child: Container(
             margin: EdgeInsets.only(
@@ -129,7 +130,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.sp),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                         color: Colors.black12, blurRadius: 5, spreadRadius: 1),
                   ],
@@ -139,7 +140,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      
                       Container(
                         height: 32.h,
                         width: double.infinity,
@@ -153,8 +153,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         ),
                         alignment: Alignment.centerLeft,
                         child: DefaultTextStyle(
-                          child: Text("Notification"),
                           style: LmsTextUtil.textRubik16(),
+                          child: const Text("Notification"),
                         ),
                       ),
                       SizedBox(
@@ -174,10 +174,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget _buildListTile() {
     return ListView.separated(
       shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       itemCount: 5,
-      padding: EdgeInsets.all(0),
-      separatorBuilder: (BuildContext context, int index) => Divider(
+      padding: const EdgeInsets.all(0),
+      separatorBuilder: (BuildContext context, int index) => const Divider(
         height: 1,
         indent: 5,
         endIndent: 5,
@@ -208,7 +208,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  @override
   Size get preferredSize => Size.fromHeight(57.h);
 }
 // Get.dialog(

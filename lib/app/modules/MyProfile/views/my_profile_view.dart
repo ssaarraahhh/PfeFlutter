@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dronalms/app/services/api_files.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dronalms/app/components/button.dart';
@@ -23,6 +24,21 @@ class MyProfileView extends GetView<MyProfileController> {
   Employe _employe;
   String img;
   MyProfileController controller = Get.find<MyProfileController>();
+
+  String _image;
+  final picker = ImagePicker();
+  Future getImage1() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      print("pathhh${pickedFile.path}");
+      String justificatifUrl = await ApiFile().addFile(pickedFile.path);
+      print("ggggggggg$justificatifUrl");
+      controller.setUserImage(justificatifUrl);
+    } else {
+      print('No image selected.');
+    }
+  }
 
   void initState() {
     Get.put<MyProfileController>(MyProfileController()).onInit();
@@ -102,10 +118,11 @@ class MyProfileView extends GetView<MyProfileController> {
                               Expanded(
                                 child: MyButton(
                                   title: "Enregistrer",
-                                  onPressed: () {
+                                  onPressed: () async {
                                     //
+
                                     controller.isReadOnly.value = true;
-                                    controller.saveChanges();
+                                    controller.saveChanges(context);
                                   },
                                   buttonHeight: 41,
                                   buttonWidth: 168.w,
@@ -142,9 +159,9 @@ class MyProfileView extends GetView<MyProfileController> {
     MyProfileController controller = Get.find<MyProfileController>();
 
     Future<String> getImage() async {
-    await Future.delayed(Duration(milliseconds: 1000), () {
-      return controller.userImg;
-    });
+      await Future.delayed(Duration(milliseconds: 1000), () {
+        return controller.userImg;
+      });
     }
 
     return [
@@ -152,10 +169,8 @@ class MyProfileView extends GetView<MyProfileController> {
           future: getImage(),
           builder: (context, snapshot) {
             print("hajkefnrr ${controller.userImg}");
-            if (!snapshot.hasData)
-             
-              { return
-              ClipOval(
+            if (!snapshot.hasData) {
+              return ClipOval(
                 child: Image.network(
                   controller.userImg,
                   width: 80.sp,
@@ -176,7 +191,8 @@ class MyProfileView extends GetView<MyProfileController> {
                         .error); // Display an error icon or placeholder image
                   },
                 ),
-              );}    // or some other placeholder
+              );
+            } // or some other placeholder
             else {
               return ClipOval(
                 child: Image.network(
@@ -204,10 +220,12 @@ class MyProfileView extends GetView<MyProfileController> {
           }),
       IconButton(
         onPressed: () {
-          // Handle upload button pressed
-          // Add your logic here
+          getImage1();
         },
-        icon: Icon(Icons.cloud_upload),
+        icon: Icon(
+          Icons.upload_file_rounded,
+          color: LmsColorUtil.primaryThemeColor,
+        ),
       ),
       SizedBox(height: 20.h),
       ProfileTextField(
@@ -290,12 +308,50 @@ class MyProfileView extends GetView<MyProfileController> {
         },
       ),
       SizedBox(height: 13.h),
-      SizedBox(height: 13.h),
       ProfileTextField(
         hintText: "Fonction",
         textEditingController: controller.functionController,
         isProtectedField: true,
         preIconData: Icons.work_rounded,
+        validator: (value) {
+          if (value.isEmpty) {
+            return "Fonction ne peut pas etre vide ";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 13.h),
+      ProfileTextField(
+        hintText: "Ancien mot de passe",
+        textEditingController: controller.useraccpasswordController,
+       isPassword: true,
+        preIconData: Icons.password_rounded,
+        validator: (value) {
+          if (value.isEmpty) {
+            return "repeter le mot de passe";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 13.h),
+      ProfileTextField(
+        hintText: "nouveau mot de passe ",
+        textEditingController: controller.usernewpasswordController,
+      isPassword: true,
+        preIconData: Icons.password_rounded,
+        validator: (value) {
+          if (value.isEmpty) {
+            return "Fonction ne peut pas etre vide ";
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 13.h),
+      ProfileTextField(
+        hintText: "confirmer le mot de passe ",
+        textEditingController: controller.userconfirmnewpasswordController,
+        isPassword: true,
+        preIconData: Icons.password_rounded,
         validator: (value) {
           if (value.isEmpty) {
             return "Fonction ne peut pas etre vide ";

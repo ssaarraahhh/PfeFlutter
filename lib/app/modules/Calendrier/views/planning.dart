@@ -177,92 +177,89 @@ class _PlanningState extends State<Planning> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       debugShowCheckedModeBanner: false,
-  localizationsDelegates: const [
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ],
-
-  home: Scaffold(
-    backgroundColor: Colors.white,
-    body: Column(
-      children: [
-        TableCalendar(
-          locale:'fr_FR',
-          availableCalendarFormats: const {
-            CalendarFormat.week: 'week',
-            CalendarFormat.month: 'Month',
-            CalendarFormat.twoWeeks: '2 weeks',
-          },
-          calendarFormat: _calendarFormat,
-          onFormatChanged: (format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          },
-          focusedDay: _focusedDay,
-          firstDay: _firstDay,
-          lastDay: _lastDay,
-          onPageChanged: (focusedDay) {
-            setState(() {
-              _focusedDay = focusedDay;
-            });
-          },
-          selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-          onDaySelected: (
-            selectedDay,
-            focusedDay,
-          ) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          },
-          calendarStyle: const CalendarStyle(
-            weekendTextStyle: TextStyle(
-              color: Colors.red,
-            ),
-            selectedDecoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.pink,
-            ),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: SizedBox(
-            height: 350,
-            width: 1000,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder<List<Widget>>(
-                future: _buildEventsForDay(_selectedDay),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) =>
-                          snapshot.data[index],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
+      debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            TableCalendar(
+              locale: 'fr_FR',
+              availableCalendarFormats: const {
+                CalendarFormat.week: 'Semaine',
+                CalendarFormat.month: 'Mois',
+                CalendarFormat.twoWeeks: '2 Semaines',
+              },
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              focusedDay: _focusedDay,
+              firstDay: _firstDay,
+              lastDay: _lastDay,
+              onPageChanged: (focusedDay) {
+                setState(() {
+                  _focusedDay = focusedDay;
+                });
+              },
+              selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+              onDaySelected: (
+                selectedDay,
+                focusedDay,
+              ) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              },
+              calendarStyle: const CalendarStyle(
+                weekendTextStyle: TextStyle(
+                  color: Colors.red,
+                ),
+                selectedDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.pink,
+                ),
               ),
             ),
-          ),
-        )
-      ],
-    ),
-  ),
-);
-
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: SizedBox(
+                height: 350,
+                width: 1000,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FutureBuilder<List<Widget>>(
+                    future: _buildEventsForDay(_selectedDay),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) => snapshot.data[index],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

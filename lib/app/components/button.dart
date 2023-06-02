@@ -26,7 +26,7 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       elevation: 0,
-      disabledColor: Color.fromRGBO(49, 65, 178, 1),
+      disabledColor: const Color.fromRGBO(49, 65, 178, 1),
       onPressed: onPressed,
       height: buttonHeight.h,
       minWidth: buttonWidth.w,

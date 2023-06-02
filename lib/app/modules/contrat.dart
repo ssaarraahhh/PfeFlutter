@@ -73,391 +73,393 @@ class ContractState extends State<Contract> {
               child: Text("OBJET :  il s'agit d'un contrat de travail ",
                   style: LmsTextUtil.textRoboto24()),
             ),
-            FutureBuilder<Contrat>(
-                future: _futureContrats,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final contracts = snapshot.data;
-                    final currentDate = DateTime.now();
-
-                    if (!_isContractValid(contracts, currentDate)) {
-                      return const Placeholder(
-                        fallbackHeight: 100,
-                        color: Colors.grey,
-                        strokeWidth: 2,
+            SingleChildScrollView(
+              child: FutureBuilder<Contrat>(
+                  future: _futureContrats,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final contracts = snapshot.data;
+                      final currentDate = DateTime.now();
+            
+                      if (!_isContractValid(contracts, currentDate)) {
+                        return const Placeholder(
+                          fallbackHeight: 100,
+                          color: Colors.grey,
+                          strokeWidth: 2,
+                        );
+                      }
+            
+                      return Container(
+                        height: 800, // Replace with your desired height
+                        child: ListView(children: [
+                          Container(
+                            margin: EdgeInsets.all(8),
+                            child: Form(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFormField(
+                                    textAlign: TextAlign.start,
+                                    style: LmsTextUtil.textPoppins14(),
+                                    obscureText: obscureText,
+                                    minLines: 1,
+                                    maxLines: maxLines,
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text: contracts.dateDebut
+                                          .toString()
+                                          .substring(0, 10),
+                                    ),
+                                    keyboardType: textInputType,
+                                    decoration: InputDecoration(
+                                      labelText: " Date Début De Contrat",
+                                      labelStyle: LmsTextUtil.textPoppins14(),
+                                      prefixIcon: Icon(Icons.calendar_month,
+                                          color: LmsColorUtil.primaryThemeColor),
+                                      contentPadding: EdgeInsets.only(left: 30.w),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.sp),
+                                        borderSide: BorderSide(
+                                            color: LmsColorUtil.greyColor10),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.sp),
+                                          borderSide: BorderSide(
+                                              color: LmsColorUtil.greyColor4,
+                                              width: 1)),
+                                    ),
+                                  ),
+                                  SizedBox(height: 25.h),
+                                  TextFormField(
+                                    textAlign: TextAlign.start,
+                                    style: LmsTextUtil.textPoppins14(),
+                                    obscureText: obscureText,
+                                    minLines: 1,
+                                    maxLines: maxLines,
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text: contracts.dateFin
+                                          .toString()
+                                          .substring(0, 10),
+                                    ),
+                                    keyboardType: textInputType,
+                                    decoration: InputDecoration(
+                                      labelText: " Date Fin De Contrat ",
+                                      labelStyle: LmsTextUtil.textPoppins14(),
+                                      prefixIcon: Icon(Icons.calendar_month,
+                                          color: LmsColorUtil.primaryThemeColor),
+                                      contentPadding: EdgeInsets.only(left: 30.w),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.sp),
+                                        borderSide: BorderSide(
+                                            color: LmsColorUtil.greyColor10),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.sp),
+                                          borderSide: BorderSide(
+                                              color: LmsColorUtil.greyColor4,
+                                              width: 1)),
+                                    ),
+                                  ),
+                                  SizedBox(height: 25.h),
+                                  FutureBuilder<Employe>(
+                                    future: _fetchEmployes(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        final employes = snapshot.data;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text:
+                                                    "${employes.nom} ${employes.prenom}",
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    " Nom & Prénom de l'Employé",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.person_outline_rounded,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+            
+                                            SizedBox(height: 25.h),
+            
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text: employes.fonction,
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText: " Fonction",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.work_rounded,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+            
+                                            SizedBox(height: 25.h),
+            
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text: employes.adresse,
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText: " Adresse",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.location_on_outlined,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+            
+                                            SizedBox(height: 25.h),
+            
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text: employes.email,
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText: " Adresse Email",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.email_outlined,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+            
+                                            SizedBox(height: 25.h),
+            
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text:
+                                                    employes.numTel,
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText: " Numéro de télèphone",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.phone,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+            
+                                            SizedBox(height: 25.h),
+            
+                                            TextFormField(
+                                              textAlign: TextAlign.start,
+                                              style: LmsTextUtil.textPoppins14(),
+                                              obscureText: obscureText,
+                                              minLines: 1,
+                                              maxLines: maxLines,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text: _magasin?.nom,
+                                              ),
+                                              keyboardType: textInputType,
+                                              decoration: InputDecoration(
+                                                labelText: " Nom du Magasin",
+                                                labelStyle:
+                                                    LmsTextUtil.textPoppins14(),
+                                                prefixIcon: Icon(
+                                                    Icons.add_business_sharp,
+                                                    color: LmsColorUtil
+                                                        .primaryThemeColor),
+                                                contentPadding:
+                                                    EdgeInsets.only(left: 30.w),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          30.sp),
+                                                  borderSide: BorderSide(
+                                                      color: LmsColorUtil
+                                                          .greyColor10),
+                                                ),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30.sp),
+                                                    borderSide: BorderSide(
+                                                        color: LmsColorUtil
+                                                            .greyColor4,
+                                                        width: 1)),
+                                              ),
+                                            ),
+                                            // Add more TextFormFields for each field you want to display
+                                          ],
+                                        );
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text('Error: ${snapshot.error}'),
+                                        );
+                                      } else {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ]),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
                     }
-
-                    return Container(
-                      height: 800, // Replace with your desired height
-                      child: ListView(children: [
-                        Container(
-                          margin: EdgeInsets.all(8),
-                          child: Form(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  textAlign: TextAlign.start,
-                                  style: LmsTextUtil.textPoppins14(),
-                                  obscureText: obscureText,
-                                  minLines: 1,
-                                  maxLines: maxLines,
-                                  readOnly: true,
-                                  controller: TextEditingController(
-                                    text: contracts.dateDebut
-                                        .toString()
-                                        .substring(0, 10),
-                                  ),
-                                  keyboardType: textInputType,
-                                  decoration: InputDecoration(
-                                    labelText: " Date Début De Contrat",
-                                    labelStyle: LmsTextUtil.textPoppins14(),
-                                    prefixIcon: Icon(Icons.calendar_month,
-                                        color: LmsColorUtil.primaryThemeColor),
-                                    contentPadding: EdgeInsets.only(left: 30.w),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.sp),
-                                      borderSide: BorderSide(
-                                          color: LmsColorUtil.greyColor10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.sp),
-                                        borderSide: BorderSide(
-                                            color: LmsColorUtil.greyColor4,
-                                            width: 1)),
-                                  ),
-                                ),
-                                SizedBox(height: 25.h),
-                                TextFormField(
-                                  textAlign: TextAlign.start,
-                                  style: LmsTextUtil.textPoppins14(),
-                                  obscureText: obscureText,
-                                  minLines: 1,
-                                  maxLines: maxLines,
-                                  readOnly: true,
-                                  controller: TextEditingController(
-                                    text: contracts.dateFin
-                                        .toString()
-                                        .substring(0, 10),
-                                  ),
-                                  keyboardType: textInputType,
-                                  decoration: InputDecoration(
-                                    labelText: " Date Fin De Contrat ",
-                                    labelStyle: LmsTextUtil.textPoppins14(),
-                                    prefixIcon: Icon(Icons.calendar_month,
-                                        color: LmsColorUtil.primaryThemeColor),
-                                    contentPadding: EdgeInsets.only(left: 30.w),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.sp),
-                                      borderSide: BorderSide(
-                                          color: LmsColorUtil.greyColor10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.sp),
-                                        borderSide: BorderSide(
-                                            color: LmsColorUtil.greyColor4,
-                                            width: 1)),
-                                  ),
-                                ),
-                                SizedBox(height: 25.h),
-                                FutureBuilder<Employe>(
-                                  future: _fetchEmployes(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      final employes = snapshot.data;
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text:
-                                                  "${employes.nom} ${employes.prenom}",
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  " Nom & Prénom de l'Employé",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.person_outline_rounded,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 25.h),
-
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text: employes.fonction,
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText: " Fonction",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.work_rounded,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 25.h),
-
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text: employes.adresse,
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText: " Adresse",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 25.h),
-
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text: employes.email,
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText: " Adresse Email",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.email_outlined,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 25.h),
-
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text:
-                                                  employes.numTel,
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText: " Numéro de télèphone",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.phone,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-
-                                          SizedBox(height: 25.h),
-
-                                          TextFormField(
-                                            textAlign: TextAlign.start,
-                                            style: LmsTextUtil.textPoppins14(),
-                                            obscureText: obscureText,
-                                            minLines: 1,
-                                            maxLines: maxLines,
-                                            readOnly: true,
-                                            controller: TextEditingController(
-                                              text: _magasin?.nom,
-                                            ),
-                                            keyboardType: textInputType,
-                                            decoration: InputDecoration(
-                                              labelText: " Nom du Magasin",
-                                              labelStyle:
-                                                  LmsTextUtil.textPoppins14(),
-                                              prefixIcon: Icon(
-                                                  Icons.add_business_sharp,
-                                                  color: LmsColorUtil
-                                                      .primaryThemeColor),
-                                              contentPadding:
-                                                  EdgeInsets.only(left: 30.w),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.sp),
-                                                borderSide: BorderSide(
-                                                    color: LmsColorUtil
-                                                        .greyColor10),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.sp),
-                                                  borderSide: BorderSide(
-                                                      color: LmsColorUtil
-                                                          .greyColor4,
-                                                      width: 1)),
-                                            ),
-                                          ),
-                                          // Add more TextFormFields for each field you want to display
-                                        ],
-                                      );
-                                    }
-                                    if (snapshot.hasError) {
-                                      return Center(
-                                        child: Text('Error: ${snapshot.error}'),
-                                      );
-                                    } else {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ]),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  ;
-                })
+                    ;
+                  }),
+            )
           ])),
         ));
   }

@@ -1,55 +1,23 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-class QuizTimer extends StatefulWidget {
-  final int duration;
-  final VoidCallback onTimerComplete;
+class TimerWidget extends StatelessWidget {
+  final int secondsRemaining;
 
-  const QuizTimer({
-    Key key,
-     this.duration,
-     this.onTimerComplete,
-  }) : super(key: key);
-
-  @override
-  _QuizTimerState createState() => _QuizTimerState();
-}
-
-class _QuizTimerState extends State<QuizTimer> {
-   Timer _timer;
-  int _remainingTime = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _remainingTime = widget.duration;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (_remainingTime > 0) {
-          _remainingTime--;
-        } else {
-          _timer.cancel();
-          widget.onTimerComplete();
-        }
-      });
-    });
-  }
+  const TimerWidget({Key key, this.secondsRemaining}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final minutes = secondsRemaining ~/ 60;
+    final seconds = secondsRemaining % 60;
+    final minutesStr = minutes.toString().padLeft(2, '0');
+    final secondsStr = seconds.toString().padLeft(2, '0');
+
     return Text(
-      'Time Left: $_remainingTime',
+      '$minutesStr:$secondsStr',
       style: TextStyle(
-        fontSize: 20.0,
+        fontSize: 24,
         fontWeight: FontWeight.bold,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 }

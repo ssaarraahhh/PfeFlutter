@@ -35,6 +35,8 @@ import 'package:get/get.dart';
 // }
 
 class LmsNotificationView extends GetView {
+  const LmsNotificationView({Key key}) : super(key: key);
+
   // const LmsNotificationView({Key? key}) : super(key: key);
 
   // Future LmsNotificationView(
@@ -45,12 +47,12 @@ class LmsNotificationView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 223.h,
       width: 210.w,
       child: Column(
         children: [
-          Text("content"),
+          const Text("content"),
           Text("content"),
           Text("content"),
           Text("content"),

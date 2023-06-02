@@ -1,32 +1,37 @@
+import 'dart:async';
+
 import 'package:dronalms/app/models/question.dart';
 import 'package:dronalms/app/models/reponse.dart';
 import 'package:dronalms/app/modules/AttendQuiz/views/timer.dart';
+import 'package:dronalms/app/modules/CourseDetail/views/course_detail_view.dart';
+import 'package:dronalms/app/routes/app_pages.dart';
 import 'package:dronalms/app/services/api-reponse.dart';
 import 'package:dronalms/app/services/api_question.dart';
 import 'package:dronalms/app/theme/color_util.dart';
 import 'package:dronalms/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class QuizScreen extends StatefulWidget {
   @override
   State<QuizScreen> createState() => _QuizScreenState();
   final int id;
-  QuizScreen({Key key,  this.id}) : super(key: key);
+  QuizScreen({Key key, this.id}) : super(key: key);
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  //define the datas
+  // Define the datas
   Future<List<Question>> _questions;
   Future<List<Question>> _quess;
+  int _secondsRemaining = 1 * 60; // 30 minutes
 
   Future<List<Reponse>> _reponses;
   Future<List<Reponse>> _reps;
 
-  //List<Question> questionList = getQuestions();
   int currentQuestionIndex = 0;
   int score = 0;
-  Reponse selectedAnswer;
+  List<Reponse> selectedAnswers = [];
 
   @override
   void initState() {
@@ -35,6 +40,23 @@ class _QuizScreenState extends State<QuizScreen> {
     _quess =
         _questions.then((t) => t.where((f) => f.idTest == widget.id).toList());
     _reponses = ApiReponse().fetchReponse();
+    _startTimer();
+  }
+
+  Timer _timer;
+
+  void _startTimer() {
+    const duration = Duration(seconds: 1);
+    _timer = Timer.periodic(duration, (Timer timer) {
+      setState(() {
+        if (_secondsRemaining > 0) {
+          _secondsRemaining--;
+        } else {
+          _timer.cancel();
+          showDialog(context: context, builder: (_) => _showScoreDialog());
+        }
+      });
+    });
   }
 
   @override
@@ -43,16 +65,13 @@ class _QuizScreenState extends State<QuizScreen> {
       backgroundColor: const Color.fromARGB(255, 5, 50, 80),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          // QuizTimer(
-          //   duration: 60, // 60 seconds
-          //   onTimerComplete: handleTimeOver,
-          // ),
-          _questionWidget(),
-          // _answerList(),
-          _nextButton(),
-        ]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _questionWidget(),
+            _nextButton(),
+          ],
+        ),
       ),
     );
   }
@@ -67,9 +86,7 @@ class _QuizScreenState extends State<QuizScreen> {
             final currentQuestion = questions[currentQuestionIndex];
             return Column(
               children: [
-                Container(),
                 Container(
-                  //alignment: Alignment.center,
                   width: double.infinity,
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
@@ -123,11 +140,8 @@ class _QuizScreenState extends State<QuizScreen> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(
-                            children: responses
-                                .map(
-                                  (e) => _answerButton(e),
-                                )
-                                .toList(),
+                            children:
+                                responses.map((e) => _answerButton(e)).toList(),
                           ),
                         ),
                       );
@@ -142,6 +156,8 @@ class _QuizScreenState extends State<QuizScreen> {
                     }
                   },
                 ),
+                SizedBox(height: 16),
+                TimerWidget(secondsRemaining: _secondsRemaining),
               ],
             );
           } else if (snapshot.hasError) {
@@ -159,7 +175,7 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _answerButton(Reponse resp) {
-    bool isSelected = resp == selectedAnswer;
+    bool isSelected = selectedAnswers.contains(resp);
 
     return Container(
       width: double.infinity,
@@ -172,14 +188,13 @@ class _QuizScreenState extends State<QuizScreen> {
           onPrimary: isSelected ? Colors.white : Colors.black,
         ),
         onPressed: () {
-          if (selectedAnswer == null) {
-            if (resp.isCorrect) {
-              score++;
+          setState(() {
+            if (selectedAnswers.contains(resp)) {
+              selectedAnswers.remove(resp);
+            } else {
+              selectedAnswers.add(resp);
             }
-            setState(() {
-              selectedAnswer = resp;
-            });
-          }
+          });
         },
         child: Text(resp.option),
       ),
@@ -209,14 +224,13 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
         onPressed: () {
           if (isLastQuestion) {
-            //display score
-
+            // Display score
             showDialog(context: context, builder: (_) => _showScoreDialog());
           } else {
-            //next question
+            // Next question
             setState(() {
-              selectedAnswer = null;
               currentQuestionIndex++;
+              selectedAnswers.clear();
             });
           }
         },
@@ -225,38 +239,127 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _showScoreDialog() {
-    bool isPassed = false;
+    return FutureBuilder<List<Question>>(
+      future: _quess,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final questions = snapshot.data;
+          return FutureBuilder<List<Reponse>>(
+            future: _reponses,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final responses = snapshot.data;
+                final selectedQuestion = questions[currentQuestionIndex];
+                final selectedResponses = responses
+                    .where((response) =>
+                        response.idQuestion == selectedQuestion.id)
+                    .toList();
+                final userSelectedResponses = selectedResponses
+                    .where((response) => selectedAnswers.contains(response))
+                    .toList();
 
-    _quess.then((questions) {
-      int l = questions.length;
-      if (score >= l * 0.6) {
-        //pass if 60 %
-        isPassed = true;
-      }
-    }).catchError((error) {
-      print("Error occurred while fetching responses: $error");
-    });
+                return AlertDialog(
+                  title: Text(
+                    "Quiz Results",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 8),
+                        Text("Answers:"),
+                        SizedBox(height: 8),
+                        DataTable(
+                          columns: [
+                            DataColumn(label: Text("Question")),
+                            DataColumn(label: Text("Answer")),
+                          ],
+                          rows: responses
+                              .map((response) {
+                                final question = questions.firstWhere(
+                                    (q) => q.id == response.idQuestion,
+                                    orElse: () => null);
+                                if (question == null) {
+                                  return null;
+                                }
+                                final isSelected =
+                                    userSelectedResponses.contains(response);
+                                return DataRow(cells: [
+                                  DataCell(Text(question.question)),
+                                  DataCell(Text(
+                                      "${response.option} ${isSelected ? "(Selected)" : ""}")),
+                                ]);
+                              })
+                              .where((row) => row != null)
+                              .toList(),
+                        ),
+                        SizedBox(height: 8),
+                        Text("Your Choices:"),
+                        SizedBox(height: 8),
+                        DataTable(
+                          columns: [
+                            DataColumn(label: Text("Question")),
+                            DataColumn(label: Text("Answer")),
+                          ],
+                          rows: userSelectedResponses
+                              .map((response) {
+                                final question = questions.firstWhere(
+                                    (q) => q.id == response.idQuestion,
+                                    orElse: () => null);
+                                if (question == null) {
+                                  return null;
+                                }
+                                return DataRow(cells: [
+                                  DataCell(Text(question.question)),
+                                  DataCell(Text(response.option)),
+                                ]);
+                              })
+                              .where((row) => row != null)
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    ElevatedButton(
+                      child: const Text("Restart"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // setState(() {
+                        //   currentQuestionIndex = 0;
+                        //   score = 0;
+                        //   selectedAnswers.clear();
 
-    String title = isPassed ? "Passed " : "Failed";
-
-    return AlertDialog(
-      title: Text(
-        title + " | Score is $score",
-        style: TextStyle(color: isPassed ? Colors.green : Colors.redAccent),
-      ),
-      content: ElevatedButton(
-        child: const Text("Restart"),
-        onPressed: () {
-          Navigator.pop(context);
-          setState(() {
-            currentQuestionIndex = 0;
-            score = 0;
-            selectedAnswer = null;
-          });
-        },
-      ),
+                        // });
+                        Get.back();
+                        Get.back();
+                      
+                      },
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Failed to load responses.'),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Failed to load questions.'),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
-
-finish() {}

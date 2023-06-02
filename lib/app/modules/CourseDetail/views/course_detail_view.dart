@@ -17,180 +17,166 @@ import 'course_content_tile_view.dart';
 class CourseDetailView extends StatefulWidget {
   final int id;
   const CourseDetailView({Key key, this.id}) : super(key: key);
+
   @override
-  // ignore: library_private_types_in_public_api
   _CourseDetailViewState createState() => _CourseDetailViewState();
 }
 
 class _CourseDetailViewState extends State<CourseDetailView> {
   Future<List<Formation>> _formations;
-  var Url = "$URL/Files/getVideo";
+  final String videoUrl = "$URL/Files/getVideo";
 
   @override
   void initState() {
     super.initState();
-
     _formations = ApiFormation().fetchFormations();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const CustomAppBar(),
-        drawer: LmsDrawer(),
-        body: SafeArea(
-          child: SingleChildScrollView(
-              child: FutureBuilder<List<Formation>>(
-                  future: _formations.then((formations) =>
-                      formations.where((f) => f.id == widget.id).toList()),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final formations = snapshot.data;
-                      final frmt = formations[0];
-                      print(frmt.formation);
-                      return Padding(
-                        padding:
-                            EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h),
-                        child: Column(
-                          
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                RoundIconButton(onTap: () {
-                                  Get.back();
-                                }),
-                                Text(frmt.nom,
-                                    style: LmsTextUtil.textRubik24()),
-                                const SizedBox(
-                                  
-                                  height: 80,
-                                ),
-                              ],
-                            ),
-                            ListView(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.only(top: 6.h, bottom: 10.h),
-                              children: [
-                                myProgressIndicator(value: 18),
-                                Container(
-                                  height: 350.h,
-                                  // width: ScreenUtil().screenWidth,
-                                  width: 1000.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.sp),
-                                  ),
-                                  child: VideoPlayerScreen2(
-                                    videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Description",
-                                        style: LmsTextUtil.textManrope24(),
-                                      ),
-                                    ),
-                                    ReadMoreText(
-                                      frmt.description,
-                                      // trimLines: 5,
-                                      trimLength: 160,
-                                      colorClickableText:
-                                          LmsColorUtil.primaryThemeColor,
-                                      style: LmsTextUtil.textRubik14(),
-                                      trimCollapsedText: "Read More",
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(width: 10.w),
-                                        iconTextRow(
-                                            iconData: Icons.sticky_note_2_sharp,
-                                            title: "Cross Training"),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 20.h),
-                                Text("Support de cours",
-                                    style: LmsTextUtil.textManrope24()),
-                                SizedBox(height: 15.h),
-                                CourseContentTile(fichier: frmt.fichier),
-                                SizedBox(height: 20.h),
-                                Text("Passer un test",
-                                    style: LmsTextUtil.textManrope24()),
-                                SizedBox(height: 15.h),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AttendQuizView(id: frmt.id)));
-                                  },
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: EdgeInsets.only(bottom: 15),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(color: Colors.grey)),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        ListTile(
-                                          leading: Icon(
-                                            Icons.task,
-                                            color:
-                                                LmsColorUtil.primaryThemeColor,
-                                            size: 20,
-                                          ),
-                                          title: Text(
-                                            "Test",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            side:
-                                                BorderSide(color: Colors.grey),
-                                          ),
-                                          contentPadding: EdgeInsets.only(
-                                              left: 12, right: 20, top: 0),
-                                          minVerticalPadding: 15,
-                                          horizontalTitleGap: 10,
-                                          minLeadingWidth: 0,
-                                          visualDensity: VisualDensity(
-                                              horizontal: 0, vertical: -4),
-                                          dense: true,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('Failed to load formations'),
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  })),
-        ));
+      appBar: const CustomAppBar(),
+      drawer: LmsDrawer(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: FutureBuilder<List<Formation>>(
+            future: _formations,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final formations = snapshot.data;
+final filteredFormations =
+                    formations.where((f) => f.id == widget.id).toList();
+
+                final frmt = filteredFormations[0];
+                return buildCourseDetail(frmt);
+              } else if (snapshot.hasError) {
+                return buildErrorWidget();
+              } else {
+                return buildLoadingWidget();
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCourseDetail(Formation frmt) {
+    return Padding(
+      padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RoundIconButton(onTap: () {
+                Get.back();
+              }),
+              Text(frmt.nom, style: LmsTextUtil.textRubik24()),
+              const SizedBox(height: 80),
+            ],
+          ),
+          buildProgressIndicator(value: 18),
+          Container(
+            height: 350.h,
+            width: 1000.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.sp),
+            ),
+            child: VideoPlayerScreen2(
+              videoUrl: '$videoUrl/${frmt.formation}',
+            ),
+          ),
+          buildCourseDescription(frmt),
+          SizedBox(height: 20.h),
+          Text("Support de cours", style: LmsTextUtil.textManrope24()),
+          SizedBox(height: 15.h),
+          CourseContentTile(fichier: frmt.fichier),
+          SizedBox(height: 20.h),
+          Text("Passer un test", style: LmsTextUtil.textManrope24()),
+          SizedBox(height: 15.h),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AttendQuizView(id: frmt.id),
+                ),
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.only(bottom: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: Colors.grey),
+              ),
+              child: buildQuizListTile(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildProgressIndicator({int value}) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Progress",
+                style:
+                    LmsTextUtil.textManrope14(fontWeight: FontWeight.w600)),
+            Text("$value% Complete",
+                style: LmsTextUtil.textManrope12(color: Colors.black)),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        Container(
+          width: double.infinity,
+          child: LinearProgressIndicator(
+            backgroundColor: LmsColorUtil.greyColor3,
+            value: value / 100,
+            color: LmsColorUtil.primaryThemeColor,
+            minHeight: 8.h,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildCourseDescription(Formation frmt) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "Description",
+            style: LmsTextUtil.textManrope24(),
+          ),
+        ),
+        ReadMoreText(
+          frmt.description,
+          trimLength: 160,
+          colorClickableText: LmsColorUtil.primaryThemeColor,
+          style: LmsTextUtil.textRubik14(),
+          trimCollapsedText: "Plus",
+        ),
+        SizedBox(height: 10.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(width: 10.w),
+            iconTextRow(
+              iconData: Icons.sticky_note_2_sharp,
+              title: "Formation",
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Widget iconTextRow({
@@ -215,29 +201,40 @@ class _CourseDetailViewState extends State<CourseDetailView> {
     );
   }
 
-  Widget myProgressIndicator({int value}) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Progress",
-                style: LmsTextUtil.textManrope14(fontWeight: FontWeight.w600)),
-            Text("$value% Complete",
-                style: LmsTextUtil.textManrope12(color: Colors.black))
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Container(
-          width: double.infinity,
-          child: LinearProgressIndicator(
-            backgroundColor: LmsColorUtil.greyColor3,
-            value: value / 100,
-            color: LmsColorUtil.primaryThemeColor,
-            minHeight: 8.h,
-          ),
-        ),
-      ],
+  Widget buildQuizListTile() {
+    return ListTile(
+      leading: Icon(
+        Icons.task,
+        color: LmsColorUtil.primaryThemeColor,
+        size: 20,
+      ),
+      title: Text(
+        "Passer Test",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey),
+      ),
+      contentPadding: EdgeInsets.only(left: 12, right: 20, top: 0),
+      minVerticalPadding: 15,
+      horizontalTitleGap: 10,
+      minLeadingWidth: 0,
+      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+      dense: true,
+    );
+  }
+
+  Widget buildErrorWidget() {
+    return Center(
+      child: Text('Failed to load formations'),
+    );
+  }
+
+  Widget buildLoadingWidget() {
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
+
