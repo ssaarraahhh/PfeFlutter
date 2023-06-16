@@ -1,37 +1,39 @@
 import 'dart:async';
 
-import 'package:dronalms/app/models/question.dart';
-import 'package:dronalms/app/models/reponse.dart';
-import 'package:dronalms/app/modules/AttendQuiz/views/timer.dart';
-import 'package:dronalms/app/modules/CourseDetail/views/course_detail_view.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/services/api-reponse.dart';
-import 'package:dronalms/app/services/api_question.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/button.dart';
+import 'package:StaffFlow/app/models/question.dart';
+import 'package:StaffFlow/app/models/reponse.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/views/timer.dart';
+
+import 'package:StaffFlow/app/services/api-reponse.dart';
+import 'package:StaffFlow/app/services/api_question.dart';
+
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class QuizScreen extends StatefulWidget {
   @override
   State<QuizScreen> createState() => _QuizScreenState();
   final int id;
-  QuizScreen({Key key, this.id}) : super(key: key);
+  String temp;
+
+  QuizScreen({Key key, this.id, this.temp}) : super(key: key);
 }
 
 class _QuizScreenState extends State<QuizScreen> {
   // Define the datas
   Future<List<Question>> _questions;
   Future<List<Question>> _quess;
-  int _secondsRemaining = 1 * 60; // 30 minutes
+
+  List<Set<Reponse>> selectedAnswers = [];
 
   Future<List<Reponse>> _reponses;
   Future<List<Reponse>> _reps;
 
   int currentQuestionIndex = 0;
   int score = 0;
-  List<Reponse> selectedAnswers = [];
+  Map<int, List<Reponse>> selectedAnswersMap = {};
 
   @override
   void initState() {
@@ -45,19 +47,25 @@ class _QuizScreenState extends State<QuizScreen> {
 
   Timer _timer;
 
+  int remainingSeconds = 0;
+
   void _startTimer() {
-    const duration = Duration(seconds: 1);
-    _timer = Timer.periodic(duration, (Timer timer) {
-      setState(() {
-        if (_secondsRemaining > 0) {
-          _secondsRemaining--;
-        } else {
-          _timer.cancel();
-          showDialog(context: context, builder: (_) => _showScoreDialog());
-        }
-      });
+  remainingSeconds = int.parse(widget.temp.substring(3, 5)) * 60 +
+      int.parse(widget.temp.substring(0, 1)) * 60;
+  
+  const duration = Duration(seconds: 1);
+  _timer = Timer.periodic(duration, (Timer timer) {
+    setState(() {
+      if (remainingSeconds > 0) {
+        remainingSeconds--;
+      } else {
+        _timer.cancel();
+        showDialog(context: context, builder: (_) => _showScoreDialog());
+      }
     });
-  }
+  });
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +165,9 @@ class _QuizScreenState extends State<QuizScreen> {
                   },
                 ),
                 SizedBox(height: 16),
-                TimerWidget(secondsRemaining: _secondsRemaining),
+                TimerWidget(
+                    secondsRemaining:
+                       remainingSeconds),
               ],
             );
           } else if (snapshot.hasError) {
@@ -175,7 +185,12 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _answerButton(Reponse resp) {
-    bool isSelected = selectedAnswers.contains(resp);
+    int questionIndex = currentQuestionIndex;
+    if (selectedAnswers.length <= questionIndex) {
+      selectedAnswers.add({});
+    }
+
+    bool isSelected = selectedAnswers[questionIndex].contains(resp);
 
     return Container(
       width: double.infinity,
@@ -189,10 +204,10 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
         onPressed: () {
           setState(() {
-            if (selectedAnswers.contains(resp)) {
-              selectedAnswers.remove(resp);
+            if (isSelected) {
+              selectedAnswers[questionIndex].remove(resp);
             } else {
-              selectedAnswers.add(resp);
+              selectedAnswers[questionIndex].add(resp);
             }
           });
         },
@@ -216,7 +231,7 @@ class _QuizScreenState extends State<QuizScreen> {
       width: MediaQuery.of(context).size.width * 0.5,
       height: 48,
       child: ElevatedButton(
-        child: Text(isLastQuestion ? "Submit" : "Next"),
+        child: Text(isLastQuestion ? "Submit" : "Suivant"),
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
           primary: Colors.blueAccent,
@@ -230,7 +245,6 @@ class _QuizScreenState extends State<QuizScreen> {
             // Next question
             setState(() {
               currentQuestionIndex++;
-              selectedAnswers.clear();
             });
           }
         },
@@ -239,116 +253,116 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _showScoreDialog() {
+    print(selectedAnswers);
     return FutureBuilder<List<Question>>(
       future: _quess,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final questions = snapshot.data;
-          return FutureBuilder<List<Reponse>>(
-            future: _reponses,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final responses = snapshot.data;
-                final selectedQuestion = questions[currentQuestionIndex];
-                final selectedResponses = responses
-                    .where((response) =>
-                        response.idQuestion == selectedQuestion.id)
-                    .toList();
-                final userSelectedResponses = selectedResponses
-                    .where((response) => selectedAnswers.contains(response))
-                    .toList();
+          int score = 0;
+          for (var answerSet in selectedAnswers) {
+            for (var response in answerSet) {
+              score = score + response.score;
+              // Use the score as needed
+            }
+            if (score > 0) {
+              score = score;
+            } else {
+              score = 0;
+            }
+          }
 
-                return AlertDialog(
-                  title: Text(
-                    "Quiz Results",
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 8),
-                        Text("Answers:"),
-                        SizedBox(height: 8),
-                        DataTable(
-                          columns: [
-                            DataColumn(label: Text("Question")),
-                            DataColumn(label: Text("Answer")),
-                          ],
-                          rows: responses
-                              .map((response) {
-                                final question = questions.firstWhere(
-                                    (q) => q.id == response.idQuestion,
-                                    orElse: () => null);
-                                if (question == null) {
-                                  return null;
-                                }
-                                final isSelected =
-                                    userSelectedResponses.contains(response);
-                                return DataRow(cells: [
-                                  DataCell(Text(question.question)),
-                                  DataCell(Text(
-                                      "${response.option} ${isSelected ? "(Selected)" : ""}")),
-                                ]);
-                              })
-                              .where((row) => row != null)
-                              .toList(),
-                        ),
-                        SizedBox(height: 8),
-                        Text("Your Choices:"),
-                        SizedBox(height: 8),
-                        DataTable(
-                          columns: [
-                            DataColumn(label: Text("Question")),
-                            DataColumn(label: Text("Answer")),
-                          ],
-                          rows: userSelectedResponses
-                              .map((response) {
-                                final question = questions.firstWhere(
-                                    (q) => q.id == response.idQuestion,
-                                    orElse: () => null);
-                                if (question == null) {
-                                  return null;
-                                }
-                                return DataRow(cells: [
-                                  DataCell(Text(question.question)),
-                                  DataCell(Text(response.option)),
-                                ]);
-                              })
-                              .where((row) => row != null)
-                              .toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                      child: const Text("Restart"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // setState(() {
-                        //   currentQuestionIndex = 0;
-                        //   score = 0;
-                        //   selectedAnswers.clear();
-
-                        // });
-                        Get.back();
-                        Get.back();
-                      
-                      },
-                    ),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Failed to load responses.'),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
+          return AlertDialog(
+            title: Text(
+              "Résultat",
+              style: LmsTextUtil.textRoboto24(),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 8),
+                  Text("Vos Réponses :"),
+                  SizedBox(height: 8),
+                  for (var i = 0; i < questions.length; i++)
+                    if (selectedAnswers.length > i)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(questions[i].question),
+                          SizedBox(height: 1),
+                          Container(
+                            height: 100,
+                            margin: EdgeInsets.only(
+                                bottom:
+                                    20), // Adjust the margin value to increase the space between rows
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                columns: [
+                                  DataColumn(label: Text("")),
+                                ],
+                                headingRowHeight: 20,
+                                columnSpacing: 20,
+                                rows: [
+                                  DataRow(
+                                    cells: [
+                                      DataCell(Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children:
+                                            selectedAnswers[i].map((response) {
+                                          final isCorrect = response.isCorrect;
+                                          final color = isCorrect
+                                              ? Colors.green
+                                              : Colors.red;
+                                          return Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .circle, // Replace with your desired icon
+                                                color: color,
+                                                size: 5,
+                                              ),
+                                              SizedBox(
+                                                  width:
+                                                      8), // Adjust the spacing between the icon and the text
+                                              Text(
+                                                response.option,
+                                                style: TextStyle(color: color),
+                                              ),
+                                            ],
+                                          );
+                                        }).toList(),
+                                      )),
+                                    ],
+                                  ),
+                                ],
+                                dataRowHeight: 200,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                        ],
+                      ),
+                  Text("Score: $score"),
+                ],
+              ),
+            ),
+            actions: [
+              MyButton(
+                child: const Text("Recommencer"),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    currentQuestionIndex = 0;
+                    selectedAnswers.clear();
+                  });
+                  Get.back();
+                  Get.back();
+                },
+              ),
+            ],
           );
         } else if (snapshot.hasError) {
           return Center(
@@ -361,5 +375,11 @@ class _QuizScreenState extends State<QuizScreen> {
         }
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

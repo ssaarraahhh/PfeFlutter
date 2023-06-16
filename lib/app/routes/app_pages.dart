@@ -1,7 +1,8 @@
-import 'package:dronalms/app/modules/Administration/views/DmandeConge.dart';
-import 'package:dronalms/app/modules/LmsMyCourses/views/categorie.dart';
-import 'package:dronalms/app/modules/contrat.dart';
-import 'package:dronalms/app/modules/home/home.dart';
+
+import 'package:StaffFlow/app/modules/Administration/views/DmandeConge.dart';
+import 'package:StaffFlow/app/modules/LmsMyCourses/views/categorie.dart';
+import 'package:StaffFlow/app/modules/contrat.dart';
+import 'package:StaffFlow/app/modules/home/home.dart';
 import 'package:get/get.dart';
 
 import '../modules/AttendQuiz/bindings/attend_quiz_binding.dart';

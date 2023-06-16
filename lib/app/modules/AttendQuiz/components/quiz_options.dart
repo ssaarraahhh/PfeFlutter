@@ -1,5 +1,5 @@
-import 'package:dronalms/app/modules/AttendQuiz/controllers/attend_quiz_controller.dart';
-import 'package:dronalms/app/modules/AttendQuiz/components/quiz_button.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/controllers/attend_quiz_controller.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/components/quiz_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

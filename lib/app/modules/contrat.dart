@@ -1,11 +1,12 @@
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/models/contrat.dart';
-import 'package:dronalms/app/models/employe.dart';
-import 'package:dronalms/app/services/api_employe.dart';
-import 'package:dronalms/app/services/api_magasin.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/models/contrat.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/services/api_employe.dart';
+import 'package:StaffFlow/app/services/api_magasin.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,7 +18,7 @@ class Contract extends StatefulWidget {
 }
 
 class ContractState extends State<Contract> {
-   Future<Contrat> _futureContrats;
+  Future<Contrat> _futureContrats;
 
   @override
   void initState() {
@@ -80,7 +81,7 @@ class ContractState extends State<Contract> {
                     if (snapshot.hasData) {
                       final contracts = snapshot.data;
                       final currentDate = DateTime.now();
-            
+
                       if (!_isContractValid(contracts, currentDate)) {
                         return const Placeholder(
                           fallbackHeight: 100,
@@ -88,7 +89,7 @@ class ContractState extends State<Contract> {
                           strokeWidth: 2,
                         );
                       }
-            
+
                       return Container(
                         height: 800, // Replace with your desired height
                         child: ListView(children: [
@@ -115,8 +116,10 @@ class ContractState extends State<Contract> {
                                       labelText: " Date Début De Contrat",
                                       labelStyle: LmsTextUtil.textPoppins14(),
                                       prefixIcon: Icon(Icons.calendar_month,
-                                          color: LmsColorUtil.primaryThemeColor),
-                                      contentPadding: EdgeInsets.only(left: 30.w),
+                                          color:
+                                              LmsColorUtil.primaryThemeColor),
+                                      contentPadding:
+                                          EdgeInsets.only(left: 30.w),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(30.sp),
@@ -149,8 +152,10 @@ class ContractState extends State<Contract> {
                                       labelText: " Date Fin De Contrat ",
                                       labelStyle: LmsTextUtil.textPoppins14(),
                                       prefixIcon: Icon(Icons.calendar_month,
-                                          color: LmsColorUtil.primaryThemeColor),
-                                      contentPadding: EdgeInsets.only(left: 30.w),
+                                          color:
+                                              LmsColorUtil.primaryThemeColor),
+                                      contentPadding:
+                                          EdgeInsets.only(left: 30.w),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(30.sp),
@@ -177,7 +182,8 @@ class ContractState extends State<Contract> {
                                           children: [
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
@@ -193,12 +199,14 @@ class ContractState extends State<Contract> {
                                                 labelStyle:
                                                     LmsTextUtil.textPoppins14(),
                                                 prefixIcon: Icon(
-                                                    Icons.person_outline_rounded,
+                                                    Icons
+                                                        .person_outline_rounded,
                                                     color: LmsColorUtil
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -206,22 +214,25 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
-            
+
                                             SizedBox(height: 25.h),
-            
+
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
@@ -240,7 +251,8 @@ class ContractState extends State<Contract> {
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -248,22 +260,25 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
-            
+
                                             SizedBox(height: 25.h),
-            
+
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
@@ -282,7 +297,8 @@ class ContractState extends State<Contract> {
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -290,22 +306,25 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
-            
+
                                             SizedBox(height: 25.h),
-            
+
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
@@ -324,7 +343,8 @@ class ContractState extends State<Contract> {
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -332,42 +352,45 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
-            
+
                                             SizedBox(height: 25.h),
-            
+
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
                                               readOnly: true,
                                               controller: TextEditingController(
-                                                text:
-                                                    employes.numTel,
+                                                text: employes.numTel,
                                               ),
                                               keyboardType: textInputType,
                                               decoration: InputDecoration(
-                                                labelText: " Numéro de télèphone",
+                                                labelText:
+                                                    " Numéro de télèphone",
                                                 labelStyle:
                                                     LmsTextUtil.textPoppins14(),
-                                                prefixIcon: Icon(
-                                                    Icons.phone,
+                                                prefixIcon: Icon(Icons.phone,
                                                     color: LmsColorUtil
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -375,22 +398,25 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
-            
+
                                             SizedBox(height: 25.h),
-            
+
                                             TextFormField(
                                               textAlign: TextAlign.start,
-                                              style: LmsTextUtil.textPoppins14(),
+                                              style:
+                                                  LmsTextUtil.textPoppins14(),
                                               obscureText: obscureText,
                                               minLines: 1,
                                               maxLines: maxLines,
@@ -409,7 +435,8 @@ class ContractState extends State<Contract> {
                                                         .primaryThemeColor),
                                                 contentPadding:
                                                     EdgeInsets.only(left: 30.w),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           30.sp),
@@ -417,14 +444,16 @@ class ContractState extends State<Contract> {
                                                       color: LmsColorUtil
                                                           .greyColor10),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30.sp),
-                                                    borderSide: BorderSide(
-                                                        color: LmsColorUtil
-                                                            .greyColor4,
-                                                        width: 1)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    30.sp),
+                                                        borderSide: BorderSide(
+                                                            color: LmsColorUtil
+                                                                .greyColor4,
+                                                            width: 1)),
                                               ),
                                             ),
                                             // Add more TextFormFields for each field you want to display
@@ -433,7 +462,8 @@ class ContractState extends State<Contract> {
                                       }
                                       if (snapshot.hasError) {
                                         return Center(
-                                          child: Text('Error: ${snapshot.error}'),
+                                          child:
+                                              Text('Error: ${snapshot.error}'),
                                         );
                                       } else {
                                         return const Center(

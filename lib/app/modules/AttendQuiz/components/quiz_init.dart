@@ -1,10 +1,10 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-import 'package:dronalms/app/components/button.dart';
-import 'package:dronalms/app/modules/AttendQuiz/components/quiz_container.dart';
-import 'package:dronalms/app/modules/AttendQuiz/components/quiz_options.dart';
-import 'package:dronalms/app/modules/AttendQuiz/controllers/attend_quiz_controller.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/button.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/components/quiz_container.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/components/quiz_options.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/controllers/attend_quiz_controller.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

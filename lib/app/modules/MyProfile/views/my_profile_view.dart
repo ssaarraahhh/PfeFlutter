@@ -1,16 +1,19 @@
 import 'dart:io';
-import 'package:dronalms/app/services/api_files.dart';
+import 'package:StaffFlow/app/components/button.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/components/profile_text_field.dart';
+import 'package:StaffFlow/app/components/round_icon_button.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/services/api_files.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
+
 import 'package:flutter/material.dart';
 
-import 'package:dronalms/app/components/button.dart';
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/round_icon_button.dart';
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/components/profile_text_field.dart';
-import 'package:dronalms/app/models/employe.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+
+
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -320,6 +323,16 @@ class MyProfileView extends GetView<MyProfileController> {
           return null;
         },
       ),
+ SizedBox(height: 13.h),
+      ProfileTextField(
+        hintText: "solde de congé",
+        textEditingController: controller.soldeconge,
+        isProtectedField: true,
+        preIconData: Icons.crisis_alert_outlined,
+               
+
+      ),
+
       SizedBox(height: 13.h),
       ProfileTextField(
         hintText: "Ancien mot de passe",

@@ -1,7 +1,9 @@
-import 'package:dronalms/app/modules/LmsDashboard/views/lms_dashboard_view.dart';
-import 'package:dronalms/app/modules/Messagerie/views/HomeScreen.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/models/notification.dart';
+import 'package:StaffFlow/app/modules/LmsDashboard/views/lms_dashboard_view.dart';
+import 'package:StaffFlow/app/modules/Messagerie/views/HomeScreen.dart';
+import 'package:StaffFlow/app/services/api_notification.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -26,7 +28,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
     var lmsDateTime = DateFormat('d MMM yyyy | HH:mm').format(DateTime.now());
     return lmsDateTime.toString();
   }
-
+  Future<List<Notification1>> _fetchNotif() async {
+    final List<Notification1> contract = await ApiNotification().fetchNotifications();
+    return contract;
+  }
   @override
   Widget build(BuildContext context) {
     ScaffoldState scaffoldState = Scaffold.of(context);
@@ -115,14 +120,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
         context: context,
         barrierColor: Colors.transparent,
         barrierDismissible: true,
-        barrierLabel: "DronaLms",
+        barrierLabel: "StaffFlow",
         pageBuilder: (_, __, ___) {
           return Stack(
             alignment: Alignment.topRight,
             fit: StackFit.loose,
             children: [
               Container(
-                height: 500.h,
+                height: 400.h,
                 width: 400.w,
                 margin: EdgeInsets.only(top: 90.h, right: 16.w),
                 // padding: EdgeInsets.only(left: 10.w, top: 2.h),
@@ -159,7 +164,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       ),
                       SizedBox(
                         width: double.infinity,
-                        height: 200.h,
+                        height: 350.h,
                         child: _buildListTile(),
                       ),
                     ],
@@ -172,205 +177,61 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   Widget _buildListTile() {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: 5,
-      padding: const EdgeInsets.all(0),
-      separatorBuilder: (BuildContext context, int index) => const Divider(
-        height: 1,
-        indent: 5,
-        endIndent: 5,
-        color: LmsColorUtil.greyColor3,
-      ),
-      itemBuilder: (_, index) {
-        return ListTile(
-          title: Text(
-            "Knowledge Repository Published to you",
-            style: LmsTextUtil.textRoboto11(),
-          ),
-          subtitle: Text(
-            formatDateTime(),
-            style: LmsTextUtil.textRoboto11(
-              color: LmsColorUtil.greyColor3,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          contentPadding:
-              EdgeInsets.only(left: 12.w, right: 8.w, top: 0.h, bottom: 0),
-          minVerticalPadding: 10.h,
-          horizontalTitleGap: 0.w,
-          minLeadingWidth: 0,
-          dense: true,
-          visualDensity: VisualDensity(horizontal: 0, vertical: -4.h),
-        );
-      },
-    );
-  }
+  return FutureBuilder<List<Notification1>>(
+    future: _fetchNotif(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // While waiting for the API response, you can show a loading indicator
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        // If there's an error, you can display an error message
+        return Text('Error: ${snapshot.error}');
+      } else {
+        // If the API response is successful, display the notifications
+        final notifications = snapshot.data;
 
-  Size get preferredSize => Size.fromHeight(57.h);
+        return ListView.separated(
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          itemCount: notifications.length,
+          padding: EdgeInsets.zero,
+          separatorBuilder: (BuildContext context, int index) => const Divider(
+            height: 1,
+            indent: 5,
+            endIndent: 5,
+            color: LmsColorUtil.greyColor3,
+          ),
+          itemBuilder: (_, index) {
+            final notification = notifications;
+            return ListTile(
+              title: Text(
+                notification[index].notifi,
+                style: LmsTextUtil.textRoboto11(),
+              ),
+              // subtitle: Text(
+              //  notification[index].notifi, // Pass the notification's dateTime to formatDateTime function
+              //   style: LmsTextUtil.textRoboto11(
+              //     color: LmsColorUtil.greyColor3,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
+              contentPadding: EdgeInsets.only(left: 12.w, right: 8.w, top: 0.h, bottom: 0),
+              minVerticalPadding: 10.h,
+              horizontalTitleGap: 0.w,
+              minLeadingWidth: 0,
+              dense: true,
+              visualDensity: VisualDensity(horizontal: 0, vertical: -4.h),
+            );
+          },
+        );
+      }
+    },
+  );
 }
-// Get.dialog(
-//   barrierColor: Colors.white,
-//   Positioned(
-//     top: 60.h,
-//     height: 223.h,
-//     left: 16.w,
-//     width: 223.h,
-//     child: Container(
-//       // height: 223.h,
-//       // width: 210.w,
-//       child: Column(
-//         children: [
-//           Text("content"),
-//           Text("content"),
-//           Text("content"),
-//           Text("content"),
-//         ],
-//       ),
-//     ),
-//   ),
-// );
-// showDialog(
-//     context: context,
-//     barrierColor: Colors.transparent,
-//     builder: (_) {
-//       return Align(
-//         alignment: Alignment.topRight,
-//         child: AlertDialog(
-//           title: Text("Notification"),
-//           shape: RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(15.sp),
-//           ),
-//           // content: ListView(
-//           //   shrinkWrap: true,
-//           //   physics: NeverScrollableScrollPhysics(),
-//           //   children: [
-//           //     Text("content"),
-//           //     Text("content"),
-//           //     Text("content"),
-//           //     Text("content"),
-//           //   ],
-//           // ),
-//         ),
-//       );
-//     });
-// : Container();
-// if (showNotificationArea == true) {
-//   setState(() {
-//     showNotificationArea = false;
-//   });
-// } else {
-//   setState(() {
-//     showNotificationArea = true;
-//   });
-// }
-// showNotificationArea
-//     ? SizedBox(
-//         height: 223.h,
-//         width: 210.w,
-//         child: Stack(
-//           children: [
-//             Positioned(
-//               top: 100.h,
-//               width: 10.w,
-//               child: Container(
-//                 height: 223.h,
-//                 width: 210.w,
-//                 child: Column(
-//                   children: [
-//                     Text("content"),
-//                     Text("content"),
-//                     Text("content"),
-//                     Text("content"),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       )
-//     : Container(),
-//
-// class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-//   const CustomAppBar({Key? key, this.backgroundColor = Colors.white}) : super(key: key);
-//   final Color backgroundColor;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     ScaffoldState scaffoldState = Scaffold.of(context);
-//     return AppBar(
-//       toolbarHeight: 54.h,
-//       // backgroundColor: LmsColorUtil.headerColor,
-//       backgroundColor: backgroundColor,
-//       elevation: 0,
-//       leading: GestureDetector(
-//         onTap: () {
-//           scaffoldState.isDrawerOpen == false
-//               ? scaffoldState.openDrawer()
-//               : scaffoldState.closeDrawer();
-//         },
-//         child: Icon(
-//           Icons.sort_rounded,
-//           color: LmsColorUtil.primaryThemeColor,
-//           size: 28.sp,
-//         ),
-//       ),
-//       centerTitle: true,
-//       toolbarOpacity: 1,
-//       // titleSpacing: 55.sp,
-//       title: GestureDetector(
-//         onTap: () => Get.offAll(() => LmsDashboardView()),
-//         child: Image.asset(
-//           ImageConstants.DRONALOGO,
-//           fit: BoxFit.fill,
-//           height: 40.h,
-//           width: 97.w,
-//         ),
-//       ),
-//       actions: [
-//         GestureDetector(
-//           onTap: () {
-//
-//             // LmsNotificationView();
-//             Get.dialog(
-//               Container(
-//                 height: 223.h,
-//                 width: 210.w,
-//                 child: Column(
-//                   children: [
-//                     Text("content"),
-//                     Text("content"),
-//                     Text("content"),
-//                     Text("content"),
-//                   ],
-//                 ),
-//               ),
-//             );
-//           },
-//           child: Container(
-//             margin: EdgeInsets.only(right: 25.w, top: 20.h, bottom: 6.h, left: 20.w),
-//             padding: EdgeInsets.only(left: 5.w, right: 5.w),
-//             alignment: Alignment.center,
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(8.sp),
-//               border: Border.all(
-//                 color: LmsColorUtil.primaryThemeColor,
-//               ),
-//             ),
-//             child: Center(
-//               child: Icon(
-//                 Icons.notifications,
-//                 color: LmsColorUtil.primaryThemeColor,
-//                 size: 15.sp,
-//               ),
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   @override
-//   Size get preferredSize => Size.fromHeight(54.h);
-// }
+
+
+  // ... existing code ...
+
+
+ // Size get preferredSize => Size.fromHeight(57.h);
+}

@@ -1,10 +1,11 @@
-import 'package:dronalms/app/components/round_icon_button.dart';
-import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/models/formation.dart';
-import 'package:dronalms/app/modules/CourseDetail/views/course_detail_view.dart';
-import 'package:dronalms/app/modules/LmsMyCourses/views/video.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/services/api_formation.dart';
+import 'package:StaffFlow/app/components/round_icon_button.dart';
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/models/formation.dart';
+import 'package:StaffFlow/app/modules/CourseDetail/views/course_detail_view.dart';
+import 'package:StaffFlow/app/modules/LmsMyCourses/views/video.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/services/api_formation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class Cours extends StatefulWidget {
 }
 
 class _CoursState extends State<Cours> {
-  Future<List<Formation>> _formations;
+  Future<List<Formation1>> _formations;
   String _videoUrl = "$URL/Files/getVideo";
 
   @override
@@ -31,9 +32,15 @@ class _CoursState extends State<Cours> {
     _loadFormations();
   }
 
-  void _loadFormations() {
-    _formations = ApiFormation().fetchFormations();
-  }
+ void _loadFormations() {
+  _formations = ApiFormation().fetchFormations().then((formations) {
+    // Filter formations based on widget.id
+    List<Formation1> filteredFormations = formations.where((formation) => formation.idCategorie == widget.id).toList();
+    return Future.value(filteredFormations); // Convert the list to a Future
+  });
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +67,7 @@ class _CoursState extends State<Cours> {
                 ],
               ),
               SizedBox(height: 16.0),
-              FutureBuilder<List<Formation>>(
+              FutureBuilder<List<Formation1>>(
                 future: _formations,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -81,7 +88,7 @@ class _CoursState extends State<Cours> {
                       childAspectRatio: 1.4,
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       children: formations.map((formt) {
-                        final videoUrl = "$_videoUrl/${formt.formation}";
+                         final videoUrl = "$_videoUrl/${formt.formation}";
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: GestureDetector(
@@ -91,7 +98,7 @@ class _CoursState extends State<Cours> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CourseDetailView(
-                                    id: formt.id
+                                    id: formt.id,formation1:formt
                                     
                                   ),
                                 ),

@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:dronalms/app/components/button.dart';
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/round_icon_button.dart';
-import 'package:dronalms/app/models/enonceTest.dart';
-import 'package:dronalms/app/modules/AttendQuiz/components/quiz_container.dart';
-import 'package:dronalms/app/modules/AttendQuiz/views/quiz.dart';
-import 'package:dronalms/app/services/api_test.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/button.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/round_icon_button.dart';
+import 'package:StaffFlow/app/models/enonceTest.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/components/quiz_container.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/views/quiz.dart';
+import 'package:StaffFlow/app/services/api_test.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -67,13 +67,13 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                     print(snapshot);
                     if (snapshot.hasData) {
                       final tests = snapshot.data;
-                      int variable = tests.length;
+                      int variable = tests.length-1;
                       List<int> mySet = [0, variable];
                       Random random = Random();
                       int randomNum =
                           mySet.elementAt(random.nextInt(mySet.length));
 
-                      final ff = tests[0];
+                      final ff = tests[randomNum];
                       return QuizContainer(
                         width: 356,
                         height: 510,
@@ -85,7 +85,7 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("UPSC -set 1 0 | 7 Questions",
+                                Text("Cliquer sur commencer",
                                     style: LmsTextUtil.textPoppins14()),
                                 Container(
                                   height: 49.h,
@@ -99,8 +99,7 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                                         width: 2,
                                         color: LmsColorUtil.greyColor3),
                                   ),
-                                  child: Text("20:00",
-                                      //ff.temps!,
+                                  child: Text(ff.temps,
                                       style: LmsTextUtil.textManrope12(
                                           color: Colors.black)),
                                 ),
@@ -117,7 +116,7 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                                       shape: BoxShape.circle,
                                       color: LmsColorUtil.primaryThemeColor),
                                 ),
-                                Text("All questions are mandatory.",
+                                Text("Toutes les questions sont obligatoires.",
                                     style: LmsTextUtil.textPoppins12()),
                               ],
                             ),
@@ -132,8 +131,10 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                                       shape: BoxShape.circle,
                                       color: LmsColorUtil.primaryThemeColor),
                                 ),
-                                Text("There is no negative marking.",
+                                Text(
+                                    "Il y a des pénalités pour les réponses\n incorrectes",
                                     style: LmsTextUtil.textPoppins12()),
+                                    
                                 SizedBox(
                                   height: 100,
                                 ),
@@ -148,8 +149,8 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              QuizScreen(id: ff.id),
+                                          builder: (context) => QuizScreen(
+                                              id: ff.id, temp: ff.temps),
                                         ));
                                   },
                                   buttonWidth: 315,
@@ -160,8 +161,7 @@ class _AttendQuizViewState extends State<AttendQuizView> {
                           ],
                         ),
                       );
-                    } 
-                     else {
+                    } else {
                       return Center(
                         child: CircularProgressIndicator(),
                       );

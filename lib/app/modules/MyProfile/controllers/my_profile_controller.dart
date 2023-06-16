@@ -1,14 +1,17 @@
-import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/models/employe.dart';
-import 'package:dronalms/app/modules/MyProfile/views/my_profile_view.dart';
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/modules/contrat.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/contrat.dart';
 import '../../../services/api_employe.dart';
 
 class MyProfileController extends GetxController {
   Employe _employe;
   //Employe emp;
+  Contrat contrat;
   String userImg = "";
 
   String userImage;
@@ -33,6 +36,7 @@ class MyProfileController extends GetxController {
   final TextEditingController dateOfBirthController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController functionController = TextEditingController();
+  final TextEditingController soldeconge = TextEditingController();
 
   final RxBool isReadOnly = true.obs;
   String Url = "$URL/Files/getImage";
@@ -45,6 +49,7 @@ class MyProfileController extends GetxController {
       _employe = employe;
       getInitialValue();
     });
+   
   }
 
   Future<void> saveChanges(BuildContext context) async {
@@ -100,7 +105,7 @@ class MyProfileController extends GetxController {
           if (userImage != null) {
             _employe.image = userImage;
           }
-          ApiEmploye().putEmploye( _employe, true);
+          ApiEmploye().putEmploye(_employe, true);
         } else {
           showDialog(
             context: context,
@@ -136,7 +141,7 @@ class MyProfileController extends GetxController {
     dateOfBirthController.text = _employe.dateNaissance;
     locationController.text = _employe.adresse;
     functionController.text = _employe.fonction;
-
+    soldeconge.text = _employe.contrat.soldeConge .toString();
     return userImg;
   }
 

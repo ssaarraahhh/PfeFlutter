@@ -1,4 +1,4 @@
-class Formation {
+class Formation1 {
   int id;
   String nom;
   String description;
@@ -10,7 +10,7 @@ class Formation {
   
   
 
-  Formation(
+  Formation1(
       {this.id,
       this.nom,
       this.description,
@@ -19,8 +19,8 @@ class Formation {
       this.formation,
       this.idCategorie});
 
-  factory Formation.fromJson(Map<String, dynamic> json) {
-    return Formation(
+  factory Formation1.fromJson(Map<String, dynamic> json) {
+    return Formation1(
         id: json['id'],
         nom: json['nom'],
         description: json['description'],

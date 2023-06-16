@@ -1,10 +1,10 @@
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/components/round_icon_button.dart';
-import 'package:dronalms/app/modules/Calendrier/views/planning.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/components/round_icon_button.dart';
+import 'package:StaffFlow/app/modules/Calendrier/views/planning.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -33,15 +33,15 @@ class EventsView extends GetView<EventsController> {
                 Text('planification', style: LmsTextUtil.textRoboto24()),
               ],
             ),
-            SizedBox(height: 35.h),
+            SizedBox(height: 30.h),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.only(left: 45.w, right: 39.w),
+                padding: EdgeInsets.only(left: 20.w, right: 20.w),
                 shrinkWrap: true,
                 children: [
                   Container(
                     height: 1000.h,
-                    width: 600,
+                    width: 700,
                     alignment: Alignment.topCenter,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.sp),

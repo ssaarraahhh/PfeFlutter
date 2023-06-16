@@ -1,18 +1,18 @@
-import 'package:dronalms/app/models/formation.dart';
+import 'package:StaffFlow/app/models/formation.dart';
 
 class Categorie {
   int id;
   String nom;
   String photo;
-  List<Formation> formations;
+  List<Formation1> formations;
 
   Categorie({this.id, this.nom, this.photo, this.formations});
 
   factory Categorie.fromJson(Map<String, dynamic> json) {
-    List<Formation> formations = [];
+    List<Formation1> formations = [];
     if (json['formations'] != null) {
-      formations = List<Formation>.from(
-          json['formations'].map((x) => Formation.fromJson(x)));
+      formations = List<Formation1>.from(
+          json['formations'].map((x) => Formation1.fromJson(x)));
     }
     return Categorie(
       id: json['id'],

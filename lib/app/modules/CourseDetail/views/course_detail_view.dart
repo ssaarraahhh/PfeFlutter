@@ -1,29 +1,32 @@
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/round_icon_button.dart';
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/modules/AttendQuiz/views/attend_quiz_view.dart';
-import 'package:dronalms/app/modules/CourseDetail/views/video2.dart';
-import 'package:dronalms/app/services/api_formation.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/round_icon_button.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/modules/AttendQuiz/views/attend_quiz_view.dart';
+import 'package:StaffFlow/app/modules/CourseDetail/views/video2.dart';
+import 'package:StaffFlow/app/services/api_formation.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
 import '../../../models/formation.dart';
 import 'course_content_tile_view.dart';
+import 'package:StaffFlow/app/models/formation.dart';
 
 class CourseDetailView extends StatefulWidget {
   final int id;
-  const CourseDetailView({Key key, this.id}) : super(key: key);
+  final Formation1 formation1;
+
+  const CourseDetailView({Key key, this.id, this.formation1}) : super(key: key);
 
   @override
   _CourseDetailViewState createState() => _CourseDetailViewState();
 }
 
 class _CourseDetailViewState extends State<CourseDetailView> {
-  Future<List<Formation>> _formations;
+  Future<List<Formation1>> _formations;
   final String videoUrl = "$URL/Files/getVideo";
 
   @override
@@ -39,12 +42,12 @@ class _CourseDetailViewState extends State<CourseDetailView> {
       drawer: LmsDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: FutureBuilder<List<Formation>>(
+          child: FutureBuilder<List<Formation1>>(
             future: _formations,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final formations = snapshot.data;
-final filteredFormations =
+                final filteredFormations =
                     formations.where((f) => f.id == widget.id).toList();
 
                 final frmt = filteredFormations[0];
@@ -61,7 +64,7 @@ final filteredFormations =
     );
   }
 
-  Widget buildCourseDetail(Formation frmt) {
+  Widget buildCourseDetail(Formation1 frmt) {
     return Padding(
       padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h),
       child: Column(
@@ -84,7 +87,7 @@ final filteredFormations =
               borderRadius: BorderRadius.circular(15.sp),
             ),
             child: VideoPlayerScreen2(
-              videoUrl: '$videoUrl/${frmt.formation}',
+              videoUrl: '$videoUrl/${widget.formation1.formation}',
             ),
           ),
           buildCourseDescription(frmt),
@@ -126,8 +129,7 @@ final filteredFormations =
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Progress",
-                style:
-                    LmsTextUtil.textManrope14(fontWeight: FontWeight.w600)),
+                style: LmsTextUtil.textManrope14(fontWeight: FontWeight.w600)),
             Text("$value% Complete",
                 style: LmsTextUtil.textManrope12(color: Colors.black)),
           ],
@@ -146,7 +148,7 @@ final filteredFormations =
     );
   }
 
-  Widget buildCourseDescription(Formation frmt) {
+  Widget buildCourseDescription(Formation1 frmt) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -237,4 +239,3 @@ final filteredFormations =
     );
   }
 }
-

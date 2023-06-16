@@ -30,5 +30,9 @@ class ConvHist {
     'idTo': idTo,
     'msg': msg,
     'timeStamp': timeStamp.toIso8601String(),
+  'user': user?.toJson(),
+         
+   
+
   };
 }

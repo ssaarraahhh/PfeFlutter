@@ -1,5 +1,5 @@
 
-import 'package:dronalms/app/models/tentativeTest.dart';
+import 'package:StaffFlow/app/models/tentativeTest.dart';
 
 class Reponse {
   int id;
@@ -30,6 +30,6 @@ class Reponse {
       };
   @override
   String toString() {
-    return 'Reponse{id: $id, option: $option, score: $score, isCorrect:$isCorrect, idReponse: $idQuestion}';
+    return 'Reponse{id: $id, option: $option, score: $score, isCorrect:$isCorrect, idQuestion: $idQuestion}';
   }
 }

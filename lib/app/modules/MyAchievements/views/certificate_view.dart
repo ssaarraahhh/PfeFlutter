@@ -1,6 +1,7 @@
-import 'package:dronalms/app/constants/image_constants.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+
+import 'package:StaffFlow/app/constants/image_constants.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,11 +17,11 @@ class CertificateView extends GetView {
       margin: EdgeInsets.only(top: 15.h),
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(ImageConstants.CERTSAMPLE),
-          alignment: Alignment.topCenter,
-          fit: BoxFit.fill,
-        ),
+        // image: DecorationImage(
+        //   image: AssetImage(ImageConstants.CALENDAR.CERTSAMPLE),
+        //   alignment: Alignment.topCenter,
+        //   fit: BoxFit.fill,
+        // ),
         borderRadius: BorderRadius.circular(30.sp),
         border: Border.all(color: LmsColorUtil.greyColor2),
       ),

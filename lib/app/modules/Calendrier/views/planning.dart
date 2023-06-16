@@ -1,6 +1,6 @@
-import 'package:dronalms/app/models/tasks.dart';
-import 'package:dronalms/app/services/api_employe.dart';
-import 'package:dronalms/app/services/api_taches.dart';
+import 'package:StaffFlow/app/models/tasks.dart';
+import 'package:StaffFlow/app/services/api_employe.dart';
+import 'package:StaffFlow/app/services/api_taches.dart';
 
 import 'package:flutter/material.dart';
 
@@ -86,76 +86,79 @@ class _PlanningState extends State<Planning> {
       events.add(SingleChildScrollView(
         child: SizedBox(
           width: double.infinity,
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 4.0),
-            padding: const EdgeInsets.all(4.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 254, 254),
-              borderRadius: BorderRadius.circular(29.0),
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      const Color.fromARGB(255, 77, 111, 233).withOpacity(0.5),
-                  spreadRadius: 3,
-                  blurRadius: 3,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: tasks[i].frequence != "daily" &&
-                          tasks[i].frequence != "weekly" &&
-                          tasks[i].frequence != "yearly"
-                      ? Checkbox(
-                          value: tasks[i].etat == "test",
-                          onChanged: (bool value) {
-                            print("*****************${tasks[i].etat}");
-                            print("*****************$value");
-                            setState(() {
-                              if (value == true) {
-                                tasks[i].etat = "test";
-                              } else {
-                                tasks[i].etat = "to do";
-                              }
-
-                              updatetask(tasks[i]);
-                            });
-                          },
-                        )
-                      : null,
-                  title: Row(
-                    children: [
-                      Text(
-                        tasks[i].titre,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                          width:
-                              50), // add some spacing between the title and trailing text
-                      Text(
-                        "${tasks[i].dateDebut.toString().substring(10, 16)} - ${tasks[i].dateFin.toString().substring(10, 16)}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                  subtitle: Text(
-                    tasks[i].description,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                )
-              ],
+        child: Container(
+  height: 100,
+  margin: const EdgeInsets.symmetric(vertical: 6.0),
+  padding: const EdgeInsets.all(6.0),
+  decoration: BoxDecoration(
+    color: const Color.fromARGB(255, 255, 254, 254),
+    borderRadius: BorderRadius.circular(35.0),
+    boxShadow: [
+      BoxShadow(
+        color: const Color.fromARGB(255, 77, 111, 233).withOpacity(0.5),
+        spreadRadius: 3,
+        blurRadius: 3,
+        offset: const Offset(0, 3),
+      ),
+    ],
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left :200.0),
+            child: Text(
+              "${tasks[i].dateDebut.toString().substring(10, 16)} - ${tasks[i].dateFin.toString().substring(10, 16)}",
+              style: const TextStyle(
+                fontSize: 8,
+              ),
             ),
           ),
+          // Add any other elements you want in the row
+        ],
+      ),
+      const SizedBox(height: 4.0), // Add spacing between the date and the title
+      ListTile(
+        contentPadding: EdgeInsets.only(left: 10), // Remove the default padding
+        leading: tasks[i].frequence != "daily" &&
+                tasks[i].frequence != "weekly" &&
+                tasks[i].frequence != "yearly" &&
+                tasks[i].typeTache != "pause"
+            ? Checkbox(
+                value: tasks[i].etat == "test",
+                onChanged: (bool value) {
+                  setState(() {
+                    if (value == true) {
+                      tasks[i].etat = "test";
+                    } else {
+                      tasks[i].etat = "to do";
+                    }
+                    updatetask(tasks[i]);
+                  });
+                },
+              )
+            : null,
+        title: Text(
+          tasks[i].titre,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          tasks[i].description,
+          style: const TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
         ),
       ));
     }
@@ -233,8 +236,8 @@ class _PlanningState extends State<Planning> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: SizedBox(
-                height: 350,
-                width: 1000,
+                height: 400,
+                width: 1300,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: FutureBuilder<List<Widget>>(

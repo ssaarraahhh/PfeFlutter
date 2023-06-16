@@ -2,76 +2,67 @@
 // import 'package:chat_bubbles/bubbles/bubble_normal.dart';
 
 // import 'package:chat_bubbles/message_bars/message_bar.dart';
-import 'package:dronalms/app/modules/Messagerie/models/Chat.dart';
-import 'package:dronalms/app/modules/Messagerie/service/ChatController.dart';
-import 'package:dronalms/app/modules/Messagerie/service/ConversationController.dart';
-import 'package:dronalms/app/modules/Messagerie/views/buuble.dart';
-import 'package:dronalms/app/modules/Messagerie/views/messagebar.dart';
+
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/modules/Messagerie/models/Chat.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ChatController.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ConversationController.dart';
+import 'package:StaffFlow/app/modules/Messagerie/views/buuble.dart';
+import 'package:StaffFlow/app/modules/Messagerie/views/messagebar.dart';
+import 'package:StaffFlow/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:test01/Controller/ChatController.dart';
-// import 'package:test01/Controller/ConversationController.dart';
-// import 'package:test01/Model/NotificationModel.dart';
-// import 'package:test01/main.dart';
 
-// import '../Controller/Notif.dart';
 import 'HomeScreen.dart';
 
 class ChatPage extends StatefulWidget {
-
-  String name;
-
+  String nom;
+  String prenom;
+  String image;
   int id;
   int indx = 0;
 
   int intFrom;
 
-
-  ChatPage(this.name, this.id, this.intFrom );
+  ChatPage(this.nom, this.prenom, this.image, this.id, this.intFrom);
 
   @override
   State<ChatPage> createState() => _ChatPageState();
-
 }
 
 class _ChatPageState extends State<ChatPage> {
-  // final conversationController = Get.put(ConversationController());
+   final conversationController = Get.put(ConversationController());
   final ScrollController _scrollController = ScrollController();
-
-
-
-
+  String Url = "$URL/Files/getImage";
 
   @override
   void initState() {
     super.initState();
-    // MyHomePage.hubConnection.on("sendMsgResponse", conversationController.onReceiveMessage);
-  print(    "initial liste =${ConversationController().messages.toString()}");
+     DronaLMS.hubConnection.on("sendMsgResponse", ConversationController().onReceiveMessage);
+    print("initial liste =${ConversationController().messages.toString()}");
   }
 
   Future<void> sendMessage(String Message) async {
     print("this ddddd");
-    final prefs =
-    await SharedPreferences.getInstance();
-    final connId= prefs.getString('ConnId');
-    print ("hatha houwa il id ${connId}");
+    final prefs = await SharedPreferences.getInstance();
+    final connId = prefs.getString('ConnId');
+    print("hatha houwa il id ${connId}");
 
-    // await MyHomePage.hubConnection.invoke("sendMsg",
-        // args: <Object>[connId, Message]).catchError((err) {
-      // print(err);
-    // });
+    await DronaLMS.hubConnection.invoke("sendMsg",
+    args: <Object>[connId, Message]).catchError((err) {
+    print(err);
+    });
     print("this message is : ${Message} send to ${widget.id.toString()}");
   }
 
   @override
   Widget build(BuildContext context) {
-
     final now = new DateTime.now();
-    // final chatController = Get.put(ChatController());
+     final chatController = Get.put(ChatController());
 
     return Scaffold(
       appBar: AppBar(
@@ -96,17 +87,15 @@ class _ChatPageState extends State<ChatPage> {
                 child: Stack(
                   children: [
                     ClipOval(
-                      child: Image.asset(
-                        'assets/images/user.jpg',
-                      ),
+                      child: Image.network("$Url/${widget.image}"),
                     ),
-                    const Align(
-                      alignment: Alignment.bottomRight,
-                      child: CircleAvatar(
-                        radius: 6,
-                        backgroundColor: Colors.green,
-                      ),
-                    ),
+                    // const Align(
+                    //   alignment: Alignment.bottomRight,
+                    //   child: CircleAvatar(
+                    //     radius: 6,
+                    //     backgroundColor: Colors.green,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -117,7 +106,7 @@ class _ChatPageState extends State<ChatPage> {
             Column(
               children: [
                 Text(
-                  widget.name,
+                  "${widget.nom} ${widget.prenom}",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -126,11 +115,11 @@ class _ChatPageState extends State<ChatPage> {
                 SizedBox(
                   height: 2,
                 ),
-                const Text('EnLigne',
-                    style: TextStyle(
-                        color: Colors.black26,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400))
+                // const Text('EnLigne',
+                //     style: TextStyle(
+                //         color: Colors.black26,
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w400))
               ],
             )
           ],
@@ -153,7 +142,7 @@ class _ChatPageState extends State<ChatPage> {
                 color: Colors.purple,
               )),
           IconButton(
-              onPressed: () async{
+              onPressed: () async {
                 print('aya 3ad');
                 SchedulerBinding.instance?.addPostFrameCallback((_) {
                   _scrollController.animateTo(
@@ -163,7 +152,7 @@ class _ChatPageState extends State<ChatPage> {
                 });
               },
               icon: Icon(
-              Icons.call,
+                Icons.call,
                 color: Colors.purple,
               ))
         ],
@@ -190,80 +179,73 @@ class _ChatPageState extends State<ChatPage> {
                       child: Column(
                         children: [
                           ListView.builder(
-
-
-                            padding: EdgeInsets.all(10),
-                            shrinkWrap: true,
-                            physics: const ScrollPhysics(),
-
-                            itemCount: messages.length,
-                            itemBuilder: (context,  index)
-                            { widget.indx=index;
-                              return Stack(
-
-                                children: [
-                                  BubbleNormal(
-                                    text: messages[index].msg,
-                                    isSender:
-                                    (widget.intFrom == messages[index].idTo)
-                                        ? false
-                                        : true,
-                                    color:
-                                    (widget.intFrom == messages[index].idTo)
-                                        ? Colors.grey.shade200
-                                        : Color(0xFF1B97F3),
-                                    tail: true,
-                                    textStyle: TextStyle(
-                                      fontSize: 20,
-                                      color:
-                                      (widget.intFrom == messages[index].idTo)
-                                          ? Colors.black
-                                          : Colors.white,
+                              padding: EdgeInsets.all(10),
+                              shrinkWrap: true,
+                              physics: const ScrollPhysics(),
+                              itemCount: messages.length,
+                              itemBuilder: (context, index) {
+                                widget.indx = index;
+                                return Stack(
+                                  children: [
+                                    BubbleNormal(
+                                      text: messages[index].msg,
+                                      isSender: (widget.intFrom ==
+                                              messages[index].idTo)
+                                          ? false
+                                          : true,
+                                      color: (widget.intFrom ==
+                                              messages[index].idTo)
+                                          ? Colors.grey.shade200
+                                          : Color(0xFF1B97F3),
+                                      tail: true,
+                                      textStyle: TextStyle(
+                                        fontSize: 20,
+                                        color: (widget.intFrom ==
+                                                messages[index].idTo)
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            }
-                          ),
+                                  ],
+                                );
+                              }),
                           // tyuiop
 
                           // rtyuio
-                          ( ConversationController().messages ==null) ? Text("") :
-
-                          GetBuilder<ConversationController>(
-                              init: ConversationController(),
-                              builder: (value) {
-                                return  Obx(() =>
-                                    ListView.builder(
-
-                                        padding: EdgeInsets.all(10),
-                                        shrinkWrap: true,
-                                        controller: _scrollController ,
-                                        physics: const ScrollPhysics(),
-                                        itemCount: ConversationController().messages.length,
-                                        itemBuilder: (context,  index)
-                                        { widget.indx=index;
-                                        return Stack(
-
-                                          children: [
-                                            BubbleNormal(
-                                              text: ConversationController().messages[index],
-                                              isSender:false,
-                                              color:Colors.grey.shade200,
-
-                                              tail: true,
-                                              textStyle: TextStyle(
-                                                fontSize: 20,
-                                                color:Colors.black
-                                                    ,
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                        }
-                                    ),);
-
-                              }),
+                          (ConversationController().messages == null)
+                              ? Text("")
+                              : GetBuilder<ConversationController>(
+                                  init: ConversationController(),
+                                  builder: (value) {
+                                    return Obx(
+                                      () => ListView.builder(
+                                          padding: EdgeInsets.all(10),
+                                          shrinkWrap: true,
+                                          controller: _scrollController,
+                                          physics: const ScrollPhysics(),
+                                          itemCount: ConversationController()
+                                              .messages
+                                              .length,
+                                          itemBuilder: (context, index) {
+                                            widget.indx = index;
+                                            return Stack(
+                                              children: [
+                                                BubbleNormal(
+                                                  text: ConversationController()
+                                                      .messages[index],
+                                                  isSender: false,
+                                                  color: Colors.grey.shade200,
+                                                  tail: true,
+                                                  textStyle: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                    );
+                                  }),
 
                           SizedBox(
                             height: 60,
@@ -288,11 +270,9 @@ class _ChatPageState extends State<ChatPage> {
               await ChatController().createChat(data);
 
               setState(() {
-                ConversationController().messages=[].obs ;
-
+                ConversationController().messages = [].obs;
               });
             },
-
           ),
         ],
       ),

@@ -1,14 +1,18 @@
-import 'package:dronalms/app/models/employe.dart';
-import 'package:dronalms/app/modules/Messagerie/service/ContactController.dart';
-import 'package:dronalms/app/modules/Messagerie/service/ControllerHub.dart';
-import 'package:dronalms/app/modules/Messagerie/service/ConversationController.dart';
+import 'dart:convert';
+
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/modules/Messagerie/models/Message.dart';
+import 'package:StaffFlow/app/modules/Messagerie/models/User.Model.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ContactController.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ControllerHub.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ConversationController.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Authetification.dart';
 import 'HomeScreen.dart';
 import 'chatPage.dart';
 
@@ -18,6 +22,15 @@ class ContactPage extends StatefulWidget {
 }
 
 class _ContactPageState extends State<ContactPage> {
+  String Url = "$URL/Files/getImage";
+
+  @override
+  void initState() {
+    super.initState();
+    ControllerHub().getOnlineUsersLis();
+    ControllerHub().getOnlineUsersInv();
+  }
+
   final conversationController = Get.put(ConversationController());
 
   @override
@@ -40,30 +53,12 @@ class _ContactPageState extends State<ContactPage> {
                 color: Colors.black,
                 letterSpacing: 0.5),
           ),
-          actions: [
-            Container(
-              margin: EdgeInsets.only(right: 10),
-              child: CircleAvatar(
-                backgroundColor: Color(0xFFEEEEEE),
-                child: IconButton(
-                    onPressed: () async {
-                      await ControllerHub().logOut().then((value) =>
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Authentification())));
-                    },
-                    icon: Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                    )),
-              ),
-            )
-          ],
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
         body: GetBuilder<ContactController>(
           init: ContactController(),
-          builder: (controller) => FutureBuilder<List<Employe>>(
+          builder: (controller) => FutureBuilder<List<Users>>(
             future: controller.getAllUsers(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -73,7 +68,9 @@ class _ContactPageState extends State<ContactPage> {
               } else if (!snapshot.hasData) {
                 return const Text('Unknown error');
               }
+
               final users = snapshot.data;
+
               return SizedBox(
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
@@ -85,15 +82,29 @@ class _ContactPageState extends State<ContactPage> {
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: () async {
                         final prefs = await SharedPreferences.getInstance();
-                        final token = prefs.getString('personId');
-                        int intFrom = int.parse(token);
+                        final token = prefs.getString('token');
+                        print(token);
+
+                        final Map<String, dynamic> decodedToken = json.decode(
+                            ascii.decode(base64.decode(
+                                base64.normalize(token.split(".")[1]))));
+
+                        print(decodedToken);
+                        final String sid = decodedToken[
+                            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
+                        print(sid);
+                        int intFrom = int.parse(sid);
                         print(users[index].id);
                         print(users[index].nom);
-                        conversationController.messages= [].obs ;
+                        conversationController.messages = [].obs;
 
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ChatPage(
-                                users[index].nom, users[index].id, intFrom)));
+                                users[index].nom,
+                                users[index].prenom,
+                                users[index].image,
+                                users[index].id,
+                                intFrom)));
                       },
                       child: Row(
                         children: [
@@ -110,9 +121,8 @@ class _ContactPageState extends State<ContactPage> {
                                 child: Stack(
                                   children: [
                                     ClipOval(
-                                      child: Image.asset(
-                                        'assets/images/user.jpg',
-                                      ),
+                                      child: Image.network(
+                                          "$Url/${users[index].image}"),
                                     ),
                                     Align(
                                       alignment: Alignment.bottomRight,
@@ -134,7 +144,7 @@ class _ContactPageState extends State<ContactPage> {
                           ),
                           Flexible(
                             child: Text(
-                              users[index].nom,
+                              "${users[index].nom} ${users[index].prenom}",
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),

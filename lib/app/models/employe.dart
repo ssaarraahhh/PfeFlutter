@@ -1,7 +1,7 @@
-import 'package:dronalms/app/models/contrat.dart';
-import 'package:dronalms/app/models/demandeCong%C3%A9.dart';
-import 'package:dronalms/app/models/magasin.dart';
-import 'package:dronalms/app/models/tasks.dart';
+import 'package:StaffFlow/app/models/contrat.dart';
+import 'package:StaffFlow/app/models/demandeCong%C3%A9.dart';
+import 'package:StaffFlow/app/models/magasin.dart';
+import 'package:StaffFlow/app/models/tasks.dart';
 
 enum Erole { ouvrier, responsable }
 
@@ -47,7 +47,7 @@ class Employe {
       this.idMagasin,
       this.magasin,
       this.autorisation,
-      this.password});
+      this.password, idContrat});
 
   factory Employe.fromJson(Map<String, dynamic> json) {
     return Employe(
@@ -61,7 +61,7 @@ class Employe {
       fonction: json["fonction"],
       image: json["image"],
       numTel: json["numTel"],
-      //idContrat: json["idContrat"],
+      idContrat: json["idContrat"],
       role: Erole.values[json['role']], // use a helper method to parse the role string
       color: json["color"],
       autorisation: json["autorisation"],
@@ -111,6 +111,10 @@ class Employe {
         
       };
 
-  @override
-  String toString() => toJson().toString();
+   String toString() {
+    return 'Employe { id: $id, cin: $cin, nom: $nom, prenom: $prenom, dateNaissance: $dateNaissance, '
+        'fonction: $fonction, image: $image, adresse: $adresse, email: $email, numTel: $numTel, '
+        'taches: $taches, demandes: $demandes, contrat: $contrat, magasin: $magasin, '
+        'idMagasin: $idMagasin, role: $role, color: $color, autorisation: $autorisation, password: $password }';
+  }
 }

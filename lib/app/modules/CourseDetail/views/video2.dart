@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
-
-
-
-
 class VideoPlayerScreen2 extends StatefulWidget {
   final String videoUrl;
 
@@ -19,37 +15,33 @@ class _VideoPlayerScreen2State extends State<VideoPlayerScreen2> {
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
 
+  @override
+  void initState() {
+    super.initState();
+    _initializeVideoPlayer();
+  }
 
-@override
-void initState() {
-  super.initState();
-  _initializeVideoPlayer();
-}
+  Future<void> _initializeVideoPlayer() async {
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    await _videoPlayerController.initialize();
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: true,
+      looping: true,
+    );
+    setState(() {});
+  }
 
-Future<void> _initializeVideoPlayer() async {
-  _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-  await _videoPlayerController.initialize();
-  _chewieController = ChewieController(
-    videoPlayerController: _videoPlayerController,
-    autoPlay: true,
-    looping: true,
-  );
-  setState(() {});
-}
-
-@override
-void dispose() {
-  _videoPlayerController.dispose();
-  _chewieController.dispose();
-  super.dispose();
-}
-
-
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: _chewieController != null
           ? Padding(
               padding: EdgeInsets.symmetric(vertical: 20),

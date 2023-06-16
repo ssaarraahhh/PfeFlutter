@@ -1,14 +1,22 @@
-import 'package:dronalms/app/components/button.dart';
-import 'package:dronalms/app/constants/image_constants.dart';
-import 'package:dronalms/app/models/login.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/services/api_employe.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'dart:math';
+
+import 'package:StaffFlow/app/components/button.dart';
+import 'package:StaffFlow/app/constants/image_constants.dart';
+import 'package:StaffFlow/app/models/EmployeInfo.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/models/login.dart';
+import 'package:StaffFlow/app/modules/LmsDashboard/views/lms_dashboard_view.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ControllerHub.dart';
+import 'package:StaffFlow/app/modules/Messagerie/views/HomeScreen.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/services/api_employe.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signalr_client/hub_connection.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key key}) : super(key: key);
@@ -19,13 +27,16 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final TextEditingController userNameController = TextEditingController();
-  Login login = Login(); // initialize login object
+  EmployeInfo login = EmployeInfo(); // initialize login object
+  Login login1 = Login(); // initialize login object
+
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
+    // ControllerHub().authMeListenerSuccess();
   }
 
   @override
@@ -125,34 +136,46 @@ class _LoginViewState extends State<LoginView> {
                         if (formKey.currentState.validate()) {
                           login.email = userNameController.text;
                           login.password = passwordController.text;
-                          formKey.currentState.save(); // save the form values
-                          // print(ApiEmploye().login(login));
+                          formKey.currentState.save();
+                          login1.email = userNameController.text;
+                          login1.password =
+                              passwordController.text; // save the form values
+                         
 
-                          final result = await ApiEmploye().login(login);
+                          await ControllerHub().authMe(
+                              userNameController.text, passwordController.text);
+
+                          // await ApiEmploye().login(login1);
+                          
                           final prefs = await SharedPreferences.getInstance();
-
                           final token = prefs.getString('token');
+
                           if (token != null) {
-                            Get.offNamed(Routes.LMS_DASHBOARD);
-                          }
-                          else{
+                            print("connecting 4");
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => LmsDashboardView()));
+                          } else {
                             showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(""),
-        content: Text("votre adresse email ou mot de passe est incorrect",style:LmsTextUtil.textPoppins14(), ),
-        actions: <Widget>[
-          MyButton(
-            child: const Text("d'accord"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );}
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(""),
+                                  content: Text(
+                                    "votre adresse email ou mot de passe est incorrect",
+                                    style: LmsTextUtil.textPoppins14(),
+                                  ),
+                                  actions: <Widget>[
+                                    MyButton(
+                                      child: const Text("d'accord"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       }),
                   SizedBox(height: 20.h),

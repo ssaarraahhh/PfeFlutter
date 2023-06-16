@@ -1,4 +1,5 @@
-import 'package:dronalms/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+
 import 'package:flutter/material.dart';
 import 'custom_line_indicator_bottom_navbar.dart';
 import 'ContactPage.dart';
@@ -13,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; //default index
 
   List<Widget> _widgetOptions = [
-    homePage(),
+    HomePage(),
     ContactPage(),
   ];
 

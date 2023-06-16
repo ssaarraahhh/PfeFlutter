@@ -1,12 +1,13 @@
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/constants/app_string_constants.dart';
-import 'package:dronalms/app/modules/LmsDashboard/components/button_box.dart';
-import 'package:dronalms/app/modules/LmsDashboard/components/corousel_slider.dart';
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/constants/image_constants.dart';
-import 'package:dronalms/app/modules/LmsDashboard/controllers/lms_dashboard_controller.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/theme/color_util.dart';
+
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/constants/app_string_constants.dart';
+import 'package:StaffFlow/app/constants/image_constants.dart';
+import 'package:StaffFlow/app/modules/LmsDashboard/components/button_box.dart';
+import 'package:StaffFlow/app/modules/LmsDashboard/components/corousel_slider.dart';
+import 'package:StaffFlow/app/modules/LmsDashboard/controllers/lms_dashboard_controller.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';

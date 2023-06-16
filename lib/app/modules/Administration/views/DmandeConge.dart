@@ -1,11 +1,11 @@
-import 'package:dronalms/app/components/custom_appbar.dart';
-import 'package:dronalms/app/components/lms_drawer.dart';
-import 'package:dronalms/app/models/demandeCongé.dart';
-import 'package:dronalms/app/modules/Administration/views/tile_content_view.dart';
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/services/api_employe.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/components/custom_appbar.dart';
+import 'package:StaffFlow/app/components/lms_drawer.dart';
+import 'package:StaffFlow/app/models/demandeCongé.dart';
+import 'package:StaffFlow/app/modules/Administration/views/tile_content_view.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/services/api_employe.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -21,16 +21,15 @@ class Administration extends StatefulWidget {
 
 class _AdministrationState extends State<Administration> {
   String _selectedItem = "tous";
-DateTime currentDate = DateTime.now();
-
+  DateTime currentDate = DateTime.now();
 
   List<Demandec> filterDemandes(List<Demandec> demandes) {
     if (_selectedItem == null) {
       return demandes;
     } else if (_selectedItem == 'validé') {
       return demandes.where((demande) => demande.reponse == 'validé').toList();
-    } else if (_selectedItem == 'réfusé') {
-      return demandes.where((demande) => demande.reponse == 'réfusé').toList();
+    } else if (_selectedItem == 'refusé') {
+      return demandes.where((demande) => demande.reponse == 'refusé').toList();
     } else if (_selectedItem == 'en attente') {
       return demandes
           .where((demande) => demande.reponse == 'en attente')
@@ -102,8 +101,8 @@ DateTime currentDate = DateTime.now();
                         child: Text('validé'),
                       ),
                       DropdownMenuItem(
-                        value: 'réfusé',
-                        child: Text('réfusé'),
+                        value: 'refusé',
+                        child: Text('refusé'),
                       ),
                       DropdownMenuItem(
                         value: 'en attente',
@@ -147,7 +146,7 @@ DateTime currentDate = DateTime.now();
                                         ),
                             ),
                             title: Text(
-                             '${currentDate.day}/${currentDate.month}/${currentDate.year}' ,
+                              '${currentDate.day}/${currentDate.month}/${currentDate.year}',
                               style: LmsTextUtil.textManrope14(
                                   fontWeight: FontWeight.w600),
                             ),

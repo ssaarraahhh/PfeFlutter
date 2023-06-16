@@ -1,18 +1,19 @@
 import 'dart:convert';
 
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/models/contrat.dart';
+import 'package:StaffFlow/app/models/demandeCong%C3%A9.dart';
+import 'package:StaffFlow/app/models/employe.dart';
+import 'package:StaffFlow/app/models/login.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/models/contrat.dart';
-import 'package:dronalms/app/models/demandeCong%C3%A9.dart';
-import 'package:dronalms/app/models/employe.dart';
-import 'package:dronalms/app/models/login.dart';
 import 'package:http/http.dart' as http;
 import '../models/tasks.dart';
 
 class ApiEmploye {
   String Url = "$URL/Employes";
+
 
   Future<List<Task>> fetchtasks() async {
     final prefs = await SharedPreferences.getInstance();
@@ -26,7 +27,6 @@ class ApiEmploye {
     final String sid = decodedToken[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
     print(sid);
-
     int id = int.parse(sid);
 
     final response = await http.get(Uri.parse('$Url/$id'));
@@ -56,18 +56,42 @@ class ApiEmploye {
     final String sid = decodedToken[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
     print(sid);
+    int id = int.parse(sid);
 
-    int id = int.parse(sid.toString());
     final response = await http.get(Uri.parse('$Url/$id'));
     if (response.statusCode == 200) {
+      print("jee l emp");
       print(response);
       print(Employe.fromJson(json.decode(response.body)));
 
       return Employe.fromJson(json.decode(response.body));
     } else {
+      print("sorry dear");
       return null;
     }
   }
+
+
+
+
+
+
+
+Future<Employe> fetchEmployeById1(int id) async {
+    
+    final response = await http.get(Uri.parse('$Url/$id'));
+    if (response.statusCode == 200) {
+      print("jee l emp");
+      print(response);
+      print(Employe.fromJson(json.decode(response.body)));
+
+      return Employe.fromJson(json.decode(response.body));
+    } else {
+      print("sorry dear");
+      return null;
+    }
+  }
+
 
   Future<void> login(Login login) async {
     final url = Uri.parse('$Url/login');
@@ -105,7 +129,6 @@ class ApiEmploye {
     final String sid = decodedToken[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
     print(sid);
-
     int id = int.parse(sid);
 
     final response = await http.get(Uri.parse('$Url/$id'));
@@ -135,7 +158,6 @@ class ApiEmploye {
     final String sid = decodedToken[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
     print(sid);
-
     int id = int.parse(sid);
     final response = await http.get(Uri.parse('$Url/$id'));
     print("eeee");
@@ -166,8 +188,8 @@ class ApiEmploye {
       final String sid = decodedToken[
           'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
       print(sid);
-
       int id = int.parse(sid);
+
       Map jsonBody = {
         'id': employe.id,
         'cin': employe.cin,
@@ -212,66 +234,64 @@ class ApiEmploye {
   }
 
   Future<String> putEmploye(Employe employe, bool change) async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    print(token);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      print(token);
 
-    final Map<String, dynamic> decodedToken = json.decode(
-        ascii.decode(base64.decode(base64.normalize(token.split(".")[1]))));
+      final Map<String, dynamic> decodedToken = json.decode(
+          ascii.decode(base64.decode(base64.normalize(token.split(".")[1]))));
 
-    print(decodedToken);
-    final String sid = decodedToken[
-        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
-    print(sid);
+      print(decodedToken);
+      final String sid = decodedToken[
+          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'];
+      print(sid);
+      int id = int.parse(sid);
+      Map<String, dynamic> jsonBody = {
+        'id': employe.id,
+        'cin': employe.cin,
+        'nom': employe.nom,
+        'prenom': employe.prenom,
+        'dateNaissance': employe.dateNaissance,
+        'adresse': employe.adresse,
+        'email': employe.email,
+        'fonction': employe.fonction,
+        'image': employe.image,
+        'numTel': employe.numTel,
+        'contrat': employe.contrat,
+        'taches': employe.taches,
+        'demandes': employe.demandes,
+        'magasin': employe.magasin,
+        'idMagasin': employe.idMagasin,
+        'role': employe.role.index,
+        "color": employe.color,
+        'autorisation': employe.autorisation,
+        'password': employe.password
+      };
 
-    int id = int.parse(sid);
-    Map<String, dynamic> jsonBody = {
-      'id': employe.id,
-      'cin': employe.cin,
-      'nom': employe.nom,
-      'prenom': employe.prenom,
-      'dateNaissance': employe.dateNaissance,
-      'adresse': employe.adresse,
-      'email': employe.email,
-      'fonction': employe.fonction,
-      'image': employe.image,
-      'numTel': employe.numTel,
-      'contrat': employe.contrat,
-      'taches': employe.taches,
-      'demandes': employe.demandes,
-      'magasin': employe.magasin,
-      'idMagasin': employe.idMagasin,
-      'role': employe.role.index,
-      "color": employe.color,
-      'autorisation': employe.autorisation,
-      'password': employe.password
-    };
+      print(employe.id);
+      print(employe.password);
+      print(employe.image);
+      String url = "$Url/$id?change=${change.toString()}";
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'content-type': 'application/json; charset=utf-8'},
+        body: jsonEncode(jsonBody),
+      );
 
-    print(employe.id);
-    print(employe.password);
-    print(employe.image);
-    String url = "$Url/$id?change=${change.toString()}";
-    final response = await http.put(
-      Uri.parse(url),
-      headers: {'content-type': 'application/json; charset=utf-8'},
-      body: jsonEncode(jsonBody),
-    );
-
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print("${response.statusCode} pppp2");
-      return "updated successfully";
-    } else {
-      throw Exception('Failed');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print("${response.statusCode} pppp2");
+        return "updated successfully";
+      } else {
+        throw Exception('Failed');
+      }
+    } catch (e) {
+      // Handle any exceptions that might occur during the request.
+      print('An error occurred: $e');
+      return 'Failed to update employe: $e';
     }
-  } catch (e) {
-    // Handle any exceptions that might occur during the request.
-    print('An error occurred: $e');
-    return 'Failed to update employe: $e';
   }
-}
-
 
   Future<bool> testPassword(int id, String password) async {
     final url = Uri.parse('$Url/test');

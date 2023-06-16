@@ -1,13 +1,14 @@
-import 'package:dronalms/app/constants/constant.dart';
-import 'package:dronalms/app/components/icon_text_row.dart';
+import 'package:StaffFlow/app/constants/constant.dart';
+import 'package:StaffFlow/app/components/icon_text_row.dart';
+import 'package:StaffFlow/app/modules/Messagerie/service/ControllerHub.dart';
 
-import 'package:dronalms/app/routes/app_pages.dart';
-import 'package:dronalms/app/theme/color_util.dart';
-import 'package:dronalms/app/theme/text_style_util.dart';
+import 'package:StaffFlow/app/routes/app_pages.dart';
+import 'package:StaffFlow/app/theme/color_util.dart';
+import 'package:StaffFlow/app/theme/text_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:dronalms/app/models/employe.dart';
+import 'package:StaffFlow/app/models/employe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_employe.dart';
@@ -59,7 +60,6 @@ class LmsDrawerState extends State<LmsDrawer> {
                       minVerticalPadding: 0,
                       leading: CircleAvatar(
                         radius: 30.sp,
-
                         backgroundColor: Colors.grey,
                         child: ClipOval(
                           child: Image.network(
@@ -147,7 +147,7 @@ class LmsDrawerState extends State<LmsDrawer> {
                 iconData: Icons.support_agent_sharp,
                 title: "Congés/Absences",
                 onTap: () {
-                 Get.back();
+                  Get.back();
                   Get.toNamed(Routes.ADMINISTRATION);
                 },
               ),
@@ -156,9 +156,11 @@ class LmsDrawerState extends State<LmsDrawer> {
                   iconData: Icons.logout,
                   title: "déconnexion",
                   onTap: () async {
-                    Get.toNamed(Routes.AUTH);
-                      final prefs = await SharedPreferences.getInstance();
-  prefs.remove('token');
+                    //Get.toNamed(Routes.AUTH);
+                    ControllerHub().logOut();
+                    final prefs = await SharedPreferences.getInstance();
+                  prefs.remove('token');
+                    Get.offAllNamed(Routes.AUTH);
                   }),
             ],
           ),

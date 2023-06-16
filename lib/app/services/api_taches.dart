@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:dronalms/app/constants/constant.dart';
+
+import 'package:StaffFlow/app/constants/constant.dart';
 import 'package:http/http.dart';
 import '../models/tasks.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,10 @@ class apiTaches {
       'dateFin': task.dateFin.toIso8601String(),
       'etat': task.etat,
       'idEmploye': task.idEmploye,
+      'typeTache': task.typeTache,
+      'frequence': task.frequence,
+      'intervalle': task.intervalle,
+      'periode': task.periode,
     };
     print(data);
 
