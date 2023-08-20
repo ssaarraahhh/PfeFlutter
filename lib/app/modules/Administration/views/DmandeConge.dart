@@ -146,7 +146,7 @@ class _AdministrationState extends State<Administration> {
                                         ),
                             ),
                             title: Text(
-                              '${currentDate.day}/${currentDate.month}/${currentDate.year}',
+                              '${demande.dateDebut.toString().substring(0,10)}',
                               style: LmsTextUtil.textManrope14(
                                   fontWeight: FontWeight.w600),
                             ),

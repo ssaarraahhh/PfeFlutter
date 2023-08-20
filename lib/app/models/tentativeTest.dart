@@ -6,7 +6,7 @@ import 'package:StaffFlow/app/models/reponse.dart';
 class TentativeTest{
     int id ;
        DateTime date ;
-        double scoreAttient ;
+        num scoreAttient ;
          bool certif;
 
         int IdEmploye ;

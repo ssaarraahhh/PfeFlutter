@@ -72,7 +72,7 @@ class LmsDrawerState extends State<LmsDrawer> {
                       ),
                       title: Text("${employes.nom} ${employes.prenom}",
                           style: LmsTextUtil.textManrope20()),
-                      subtitle: Text(employes.id.toString(),
+                      subtitle: Text("",
                           style:
                               LmsTextUtil.textManrope12(color: Colors.white)),
                     );
@@ -159,14 +159,14 @@ class LmsDrawerState extends State<LmsDrawer> {
                     //Get.toNamed(Routes.AUTH);
                     ControllerHub().logOut();
                     final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('token');
+                    prefs.remove('token');
                     Get.offAllNamed(Routes.AUTH);
                   }),
             ],
           ),
           Padding(
             padding: EdgeInsets.only(bottom: 37.h),
-            child: Text("Version 1.01", style: LmsTextUtil.textManrope16()),
+            child: Text("StaffFlow", style: LmsTextUtil.textManrope16()),
           ),
         ],
       ),

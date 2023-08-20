@@ -259,7 +259,7 @@ class _QuizScreenState extends State<QuizScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final questions = snapshot.data;
-          int score = 0;
+          num score = 0;
           for (var answerSet in selectedAnswers) {
             for (var response in answerSet) {
               score = score + response.score;

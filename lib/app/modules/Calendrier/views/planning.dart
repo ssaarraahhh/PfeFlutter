@@ -30,6 +30,7 @@ class _PlanningState extends State<Planning> {
 
   Future<List<Task>> getTasksForDay(DateTime day) async {
     final employeTasks = await apiEmploye.fetchtasks();
+    employeTasks.sort((a, b) => a.dateDebut.compareTo(b.dateDebut));
 
     List<Task> tasksForDay = [];
 
@@ -44,9 +45,13 @@ class _PlanningState extends State<Planning> {
         // Check if any of the occurrences fall on the specified day
         if (occurrences.any((occurrence) => isSameDay(occurrence, day))) {
           tasksForDay.add(task);
+            tasksForDay.sort((a, b) => a.dateDebut.compareTo(b.dateDebut)); // Sort tasks by date
+
         }
       } else if (isSameDay(task.dateDebut, day)) {
         tasksForDay.add(task);
+          tasksForDay.sort((a, b) => a.dateDebut.compareTo(b.dateDebut)); // Sort tasks by date
+
       }
     }
     return tasksForDay;
@@ -81,84 +86,87 @@ class _PlanningState extends State<Planning> {
     List<Widget> events = [];
 
     List<Task> tasks = await getTasksForDay(day);
+  tasks.sort((a, b) => a.dateDebut.compareTo(b.dateDebut)); // Sort tasks by date
 
     for (int i = 0; i < tasks.length; i++) {
       events.add(SingleChildScrollView(
         child: SizedBox(
           width: double.infinity,
-        child: Container(
-  height: 100,
-  margin: const EdgeInsets.symmetric(vertical: 6.0),
-  padding: const EdgeInsets.all(6.0),
-  decoration: BoxDecoration(
-    color: const Color.fromARGB(255, 255, 254, 254),
-    borderRadius: BorderRadius.circular(35.0),
-    boxShadow: [
-      BoxShadow(
-        color: const Color.fromARGB(255, 77, 111, 233).withOpacity(0.5),
-        spreadRadius: 3,
-        blurRadius: 3,
-        offset: const Offset(0, 3),
-      ),
-    ],
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left :200.0),
-            child: Text(
-              "${tasks[i].dateDebut.toString().substring(10, 16)} - ${tasks[i].dateFin.toString().substring(10, 16)}",
-              style: const TextStyle(
-                fontSize: 8,
-              ),
+          child: Container(
+            height: 100,
+            margin: const EdgeInsets.symmetric(vertical: 6.0),
+            padding: const EdgeInsets.all(6.0),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 255, 254, 254),
+              borderRadius: BorderRadius.circular(35.0),
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      const Color.fromARGB(255, 77, 111, 233).withOpacity(0.5),
+                  spreadRadius: 3,
+                  blurRadius: 3,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 200.0),
+                      child: Text(
+                        "${tasks[i].dateDebut.toString().substring(10, 16)} - ${tasks[i].dateFin.toString().substring(10, 16)}",
+                        style: const TextStyle(
+                          fontSize: 8,
+                        ),
+                      ),
+                    ),
+                    // Add any other elements you want in the row
+                  ],
+                ),
+                const SizedBox(
+                    height: 4.0), // Add spacing between the date and the title
+                ListTile(
+                  contentPadding:
+                      EdgeInsets.only(left: 10), // Remove the default padding
+                  leading: tasks[i].frequence != "daily" &&
+                          tasks[i].frequence != "weekly" &&
+                          tasks[i].frequence != "yearly" &&
+                          tasks[i].typeTache != "pause"
+                      ? Checkbox(
+                          value: tasks[i].etat == "test",
+                          onChanged: (bool value) {
+                            setState(() {
+                              if (value == true) {
+                                tasks[i].etat = "test";
+                              } else {
+                                tasks[i].etat = "to do";
+                              }
+                              updatetask(tasks[i]);
+                            });
+                          },
+                        )
+                      : null,
+                  title: Text(
+                    tasks[i].titre,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    tasks[i].description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          // Add any other elements you want in the row
-        ],
-      ),
-      const SizedBox(height: 4.0), // Add spacing between the date and the title
-      ListTile(
-        contentPadding: EdgeInsets.only(left: 10), // Remove the default padding
-        leading: tasks[i].frequence != "daily" &&
-                tasks[i].frequence != "weekly" &&
-                tasks[i].frequence != "yearly" &&
-                tasks[i].typeTache != "pause"
-            ? Checkbox(
-                value: tasks[i].etat == "test",
-                onChanged: (bool value) {
-                  setState(() {
-                    if (value == true) {
-                      tasks[i].etat = "test";
-                    } else {
-                      tasks[i].etat = "to do";
-                    }
-                    updatetask(tasks[i]);
-                  });
-                },
-              )
-            : null,
-        title: Text(
-          tasks[i].titre,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        subtitle: Text(
-          tasks[i].description,
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-
         ),
       ));
     }
